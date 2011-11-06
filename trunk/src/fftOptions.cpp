@@ -29,6 +29,8 @@ void fftOptions::addfftOptions()
 			"sample index 1 and the largest frequency at sample index N")
 	("positive-only,p", "If the input is real the spectrum is symmetric and only one half-axis carries "
 			"information. This option suppresses the negative frequencies in the output if the input data is real.")
+	("magnitude-phase,M","Output format: Writes the magnitude and phase to the output, "
+			"rather than real and imaginary components.")
 	("inverse,I","Perform an inverse fft rather than a forward FFT.")
 	("complex,c","Perform transformations on complex data.")
 	("x-values,x", po::value<int>(&xColumn)->default_value(xColumn),

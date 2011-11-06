@@ -131,7 +131,28 @@ double fftw_vector::norm() const
 
 	return sqrt(norm);
 }
+///////////////////////////////////////////////////////////////////////////////
+polar fftw_vector::getPolar(int idx)
+{
+	polar p(sqrt(m_x[idx][0]*m_x[idx][0]+ m_x[idx][1]*m_x[idx][1]),
+          atan2(m_x[idx][1],m_x[idx][0]));
 
+	return p;
+}
+///////////////////////////////////////////////////////////////////////////////
+void fftw_vector::getSample(double& x, double& y, int idx, bool polar_coord)
+{
+	if(polar_coord)
+	{
+		x = abs(idx);
+		y = arg(idx);
+	}
+	else
+	{
+		x = m_x[idx][0];
+		y = m_x[idx][1];
+	}
+}
 ///////////////////////////////////////////////////////////////////////////////
 void fftw_vector::mult_conjugate(fftw_vector& p, bool conjugate)
 {

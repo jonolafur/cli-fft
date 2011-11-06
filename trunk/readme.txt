@@ -1,7 +1,7 @@
 2011-11-05:
 
 1. Overview
-This is a small utility for generating FFT of ASCII files or standard in and output to file or std out. The build is static, so no complicated dependecies must be fulfilled and thus it should be possible to use the binary with any distribution that runs on x86 or x86_64.
+This is a small utility for generating FFT of ASCII files or standard in and output to file or std out. The build is static, so no complicated dependencies must be fulfilled and thus it should be possible to use the binary with any distribution that runs on x86 or x86_64.
 
 2. Installing
 To install, just copy the binary someplace where the system finds it (e.g. in your path.)

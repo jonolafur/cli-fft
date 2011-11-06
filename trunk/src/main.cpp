@@ -115,9 +115,9 @@ void writeOutput(fftOptions& opt, fftw_vector& fft_vec)
 		out_stream = &std::cout;
 
 	if(opt.orderSamples())
-		writeOrdered(fft_vec,out_stream);
+		writeOrdered(fft_vec,out_stream, opt.writeMagnitudeAndPhase());
 
-	writeStandard(fft_vec, out_stream, opt.positiveAxisOnly() );
+	writeStandard(fft_vec, out_stream, opt.positiveAxisOnly(), opt.writeMagnitudeAndPhase() );
 
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -132,36 +132,38 @@ double checkSampleTime(const std::vector<double>& t)
 	return dt;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void writeOrdered(fftw_vector& fft, std::ostream* out_stream)
+void writeOrdered(fftw_vector& fft, std::ostream* out_stream, bool writeMagArg)
 {
 	std::size_t N = fft.size();
 	int iN = static_cast<int>(N);
+	double x, y;
 
 	// The negative half-axis:
 	for(std::size_t i=N/2; i<N; i++)
 	{
-		(*out_stream) << fft.frequency(i-iN) << ' '
-				<< fft[i][0] << ' ' << fft[i][1] << '\n';
+		fft.getSample(x,y,i,writeMagArg);
+		(*out_stream) << fft.frequency(i-iN) << ' ' << x << ' ' << y << '\n';
 	}
 
 	for(std::size_t i=0; i<N/2; i++)
 	{
-		(*out_stream) << fft.frequency(i) << ' '
-				<< fft[i][0] << ' ' << fft[i][1] << '\n';
+		fft.getSample(x,y,i,writeMagArg);
+		(*out_stream) << fft.frequency(i) << ' ' << x << ' ' << y << '\n';
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
 void writeStandard(fftw_vector& fft, std::ostream* out_stream,
-		bool writeFirstHalfOnlyhalf)
+		bool writeFirstHalfOnlyhalf, bool writeMagArg)
 {
 	std::size_t N = fft.size();
+	double x, y;
 
 	if(writeFirstHalfOnlyhalf) N/=2;
 
 	for(std::size_t i=0; i<N; i++)
 	{
-		(*out_stream) << fft.frequency(i) << ' '
-				<< fft[i][0] << ' ' << fft[i][1] << '\n';
+		fft.getSample(x,y,i,writeMagArg);
+		(*out_stream) << fft.frequency(i) << ' '<< x << ' ' << y << '\n';
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////

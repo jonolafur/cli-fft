@@ -29,6 +29,7 @@ public:
 	bool xAxisSpecified(){return xColumn!=0;}
 	bool orderSamples(){return (var_map.count("ordered-x-axis") && !positiveAxisOnly() );}
 	bool positiveAxisOnly(){return ( var_map.count("positive-only") && !isComplex() );}
+	bool writeMagnitudeAndPhase(){return var_map.count("magnitude-phase");}
 
 protected:
 	void addfftOptions();
