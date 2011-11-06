@@ -156,5 +156,6 @@ message( STATUS "${BIN_NAME} will install to ${INST_DIR}" )
 # They also contain their own CMakeList.txt files
 add_subdirectory(${BUILD_UTILS}/Test-utils/ascii-compare)
 add_subdirectory(tests)
+add_subdirectory(utils)
 
 

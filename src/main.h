@@ -41,9 +41,9 @@ void processInput(fftOptions& opt, fftw_vector& fft_vec);
 void writeOutput(fftOptions& opt, fftw_vector& fft_vec);
 void writeOutput(fftOptions& opt, fftw_vector& fft_vec);
 double checkSampleTime(const std::vector<double>& t);
-void writeOrdered(fftw_vector& fft, std::ostream* out_stream);
+void writeOrdered(fftw_vector& fft, std::ostream* out_stream, bool writeMagArg);
 void writeStandard(fftw_vector& fft, std::ostream* out_stream,
-		bool writeFirstHalfOnlyhalf=false);
+		bool writeFirstHalfOnlyhalf, bool writeMagArg);
 
 #endif //_RX_MAIN_H
 
