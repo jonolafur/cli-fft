@@ -53,8 +53,6 @@ endmacro(COPY_DIR)
 
 set( BOOST_ROOT "~/bin/boost/" )
 set( BOOST_INCLUDEDIR "~/bin/boost/" )
-#set( Boost_ADDITIONAL_VERSIONS "1.43" "1.43.0" "1.44" "1.44.0" )
-set( Boost_USE_STATIC_LIBS ON )
 
 find_package( Boost 1.43 COMPONENTS program_options REQUIRED)
 message(STATUS "Include boost:  ${BOOST_INCLUDEDIR}" )
