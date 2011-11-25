@@ -23,8 +23,6 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 
 set( BOOST_ROOT "~/bin/boost/" )
 set( BOOST_INCLUDEDIR "~/bin/boost/" )
-set( Boost_ADDITIONAL_VERSIONS "1.43" "1.43.0" "1.44" "1.44.0" "1.45" "1.45.0" )
-set( Boost_USE_STATIC_LIBS ON )
 
 find_package( Boost 1.43 COMPONENTS program_options REQUIRED)
 message(STATUS "Include boost:  ${BOOST_INCLUDEDIR}" )
@@ -76,7 +74,7 @@ add_executable (${BIN_NAME}
 
 unset(CMAKE_RUNTIME_OUTPUT_DIRECTORY)
 
-message(STATUS "### !!! Using ascii_copare!!!" )
+message(STATUS "### !!! Using ascii_compare!!!" )
 message(STATUS "### The ascii_compare tool was compiled and is located in the root directory" )
 message(STATUS "### of your build tree. This is controlled by the variable CMAKE_BINARY_DIR" )
 message(STATUS "### The current location is: ${CMAKE_BINARY_DIR}" )
