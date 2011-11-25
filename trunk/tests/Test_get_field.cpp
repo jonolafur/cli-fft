@@ -23,7 +23,7 @@ bool compareExtractedTokens(std::string& s,
 		const std::vector<std::string>& tokens, std::string delimiter)
 {
 	std::vector<std::string> extracted;
-	tokenizeString(extracted, s, delimiter);
+	tokenize(extracted, s, delimiter);
 
 	if(tokens.size()!=extracted.size())
 	{
@@ -50,9 +50,9 @@ int Test_get_field(int, char*[] )
 	std::vector<std::string> tokens;
 	tokens.push_back("hello");
 	tokens.push_back("world");
-	tokens.push_back("123");
-	tokens.push_back("456");
-	tokens.push_back("2345");
+	tokens.push_back("-.123");
+	tokens.push_back("456e3");
+	tokens.push_back("234.598e4");
 
 	std::cout << std::endl << "Testing tokenizing using white space as delimiter..." << std::endl;
 	fillString(s, tokens, delimiter);
