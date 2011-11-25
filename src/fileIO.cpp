@@ -7,9 +7,6 @@
 
 #include "fileIO.h"
 
-typedef boost::char_separator<char> token_separator;
-typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
-
 ///////////////////////////////////////////////////////////////////////////////
 bool isCommentedOut(std::string line, std::string commentIdentifier)
 {
@@ -17,19 +14,6 @@ bool isCommentedOut(std::string line, std::string commentIdentifier)
 		return true;
 
 	return (line[0]==commentIdentifier[0]);
-}
-///////////////////////////////////////////////////////////////////////////////
-void tokenizeString(std::vector<std::string>& tokenVector,
-		std::string& s, std::string delimiter)
-{
-	tokenVector.clear();
-	token_separator sep;
-	if( !delimiter.empty() )
-		sep = token_separator(delimiter.c_str());
-
-	tokenizer tokens(s, sep);
-	for(tokenizer::iterator tok_iter = tokens.begin(); tok_iter != tokens.end(); ++tok_iter)
-		tokenVector.push_back( std::string(*tok_iter) );
 }
 ///////////////////////////////////////////////////////////////////////////////
 void getColsFromFile(std::string fileName, data_columns& columns,
@@ -59,8 +43,7 @@ void getColsFromFile(std::string fileName, data_columns& columns,
 	{
 		if( isCommentedOut(rawLineFromFile) ) continue;
 
-		tokenizeString(tokenizedLine, rawLineFromFile, delimiter);
-
+		tokenize(tokenizedLine, rawLineFromFile, delimiter);
 		if(tokenizedLine.size()<largestColumnIndex) continue;
 
 		for(std::size_t i=0; i<columnIdx.size(); i++)
@@ -70,7 +53,15 @@ void getColsFromFile(std::string fileName, data_columns& columns,
 		}
 	}
 }
-
+///////////////////////////////////////////////////////////////////////////////
+void tokenize(std::vector<std::string>& result, const std::string& inputLine,
+              const std::string& delimiter)
+{
+	if(delimiter.empty() || delimiter==" ")
+		ba::split(result, inputLine, isspace, ba::token_compress_on);
+	else
+		ba::split(result, inputLine, ba::is_any_of(delimiter), ba::token_compress_on);
+}
 
 
 

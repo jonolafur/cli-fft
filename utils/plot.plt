@@ -17,10 +17,11 @@
 # set terminal x11 
 # set output
 
-set logscale y
+set nologscale y
 set grid
-set yrange [1.0:20000]
-plot '< tail -n 20000 test.txt | fft -x 1 -y 2 -p -M' using 1:2
+set yrange [1.0:4096]
+set xrange [0:6]
+plot '< tail -n 4096 test.txt | fft -x 1 -y 2 -p -M' using 1:2
 
 pause 1
 reread

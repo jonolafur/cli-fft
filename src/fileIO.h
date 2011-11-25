@@ -15,22 +15,23 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
+#include <locale>
 
 #include <boost/lexical_cast.hpp>
-#include <boost/tokenizer.hpp>
+#include <boost/algorithm/string.hpp>
+
+namespace ba = boost::algorithm;
 
 ///////////////////////////////////////////////////////////////////////////////
 typedef std::vector<std::vector<double> > data_columns;
 
 bool isCommentedOut(std::string line, std::string commentIdentifier="#");
 
-void tokenizeString(std::vector<std::string>& tokenVector,
-		std::string& s, std::string delimiter="");
-
 void getColsFromFile(std::string fileName,
 		data_columns& columns, std::vector<int>& columnIdx,
 		std::string delimiter);
-
+void tokenize(std::vector<std::string>& result, const std::string& inputLine,
+              const std::string& delimiter);
 
 #endif /* FILEIO_H_ */
 
