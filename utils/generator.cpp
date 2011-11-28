@@ -20,24 +20,16 @@ int main(int , char*[])
 
 	double t=0.0;
 	double w_0 = 3.5*2.0*3.14159265;
-//	double dw = 0.0;
 	while(1)
 	{
 		std::cout << t << ' ' << sin(w_0*t) + gauss() << std::endl;
 		t+=0.1;
 
-//		w_0+=0.0001;
+		// Every 5000 point toggle the frequency:
  		if( (int(t)%10000) >5000 )
  			w_0 = 3.0*2.0*3.14159265;
  		else
  			w_0 = 3.5*2.0*3.14159265;
-
-
-// 		{
-// 			std::cout << "# w_0: " << w_0 << " t: " << t<< std::endl;
-// 			w_0 = 0.0;
-// 			std::cout << "# w_0: " << w_0 << " t: " << t<< std::endl;
-// 		}
 
 		usleep(200);
 	}

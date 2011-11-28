@@ -6,12 +6,15 @@ set( BIN_NAME ascii_compare )
 
 enable_testing()
 
-set( CMAKE_VERBOSE_MAKEFILE OFF)
+set( CMAKE_VERBOSE_MAKEFILE ON)
 if(CMAKE_COMPILER_IS_GNUCXX)
-  set( CMAKE_CXX_FLAGS_DEBUG "-O0 -static -Wall -Wextra -pedantic -ggdb3" )
-  set( CMAKE_CXX_FLAGS_RELEASE "-O3 -static -Wall -Wextra -pedantic" )
-message( STATUS "Will compile ${BIN_NAME} with additional options: ${TARGET_PROP}" )
-
+  set( GCC_WARN_OPTIONS "-Wall -Wextra -pedantic -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wno-pmf-conversions -Wsign-promo -fopenmp")
+  set( CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb3 ${GCC_WARN_OPTIONS}" )
+  # The option -O3 will turn optimization.
+  # The -static will cause the executable to be statically linked.
+  # Now it should no longer be required to specify this when calling cmake.
+  # The option -s will remove all symbol table and relocation information from the executable.
+  set( CMAKE_CXX_FLAGS_RELEASE "-O3 -static -s ${GCC_WARN_OPTIONS}" )
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 ####################################################################################
@@ -24,7 +27,10 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 set( BOOST_ROOT "~/bin/boost/" )
 set( BOOST_INCLUDEDIR "~/bin/boost/" )
 
-find_package( Boost 1.43 COMPONENTS program_options REQUIRED)
+find_package( Boost COMPONENTS program_options REQUIRED)
+
+set(Boost_USE_STATIC_LIBS   ON)
+
 message(STATUS "Include boost:  ${BOOST_INCLUDEDIR}" )
 message(STATUS "Will link to Boost: ${Boost_LIBRARIES}" )
 message(STATUS "Will include boost libs from here: ${Boost_LIBRARY_DIRS}" )

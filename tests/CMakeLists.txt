@@ -67,6 +67,10 @@ set_tests_properties(Test_fft_version
 
 add_test( Test_fft_std_in_out ${CMAKE_SOURCE_DIR}/tests/Test_std_in_out.bash )
 
+add_test( Test_fft_inverse ${CMAKE_BINARY_DIR}/fft -I -x 1 -y 2 -c
+                         -i tests/Test_fft_std_in_out.txt 
+                         -o tests/Test_fft_inverse.txt )
+
 #add_test(Test_Rx_L1_Compare ${CMAKE_BINARY_DIR}/ascii_compare
 #               -t ${CMAKE_CURRENT_BINARY_DIR}/Test_Rx_L1_corr.txt
 #                -r ${CMAKE_CURRENT_BINARY_DIR}/ref-data/Test_Rx_L1_corr.txt
