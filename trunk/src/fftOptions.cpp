@@ -23,7 +23,7 @@ void fftOptions::addfftOptions()
 	("output-file,o", po::value<std::string>(&outFileName)->default_value(outFileName),
 			"Name of output file. If nothing is specified, the standard output will be used.")
 	("delimiter,d", po::value<char>(&delimiter)->default_value(delimiter), "Delimiter for data fields.")
-	("ordered-x-axis,o","The natural output of the fft is to have the positive frequencies "
+	("ordered-x-axis,O","The natural output of the fft is to have the positive frequencies "
 			"from sample index 1 to N/2 and the negative frequencies from sample index N/2 to N. "
 			"With this option the frequency axis is ordered, i.e. the smallest frequency is at "
 			"sample index 1 and the largest frequency at sample index N")

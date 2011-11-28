@@ -4,7 +4,7 @@ project(fft)
 
 enable_testing()
 
-set(CMAKE_VERBOSE_MAKEFILE OFF)
+set(CMAKE_VERBOSE_MAKEFILE ON)
 set(BUILD_UTILS "build_utils")
 
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -54,7 +54,10 @@ endmacro(COPY_DIR)
 set( BOOST_ROOT "~/bin/boost/" )
 set( BOOST_INCLUDEDIR "~/bin/boost/" )
 
-find_package( Boost 1.43 COMPONENTS program_options REQUIRED)
+find_package( Boost COMPONENTS program_options REQUIRED)
+
+set(Boost_USE_STATIC_LIBS   ON)
+
 message(STATUS "Include boost:  ${BOOST_INCLUDEDIR}" )
 message(STATUS "Will link to Boost: ${Boost_LIBRARIES}" )
 message(STATUS "Will include boost libs from here: ${Boost_LIBRARY_DIRS}" )

@@ -59,7 +59,7 @@ int Test_read_file(int, char*[] )
 	data_columns columns;
 	std::vector<int> columnIdx;
 	std::string delimiter = " ";
-	std::string fileName("test.txt");
+	std::string fileName("Test_read_file.txt");
 
 	columnIdx.push_back(1);
 	columnIdx.push_back(2);
