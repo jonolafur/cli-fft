@@ -20,19 +20,26 @@ int main(int argc, char* argv[])
 
 	int ret_val = ret_ok;
 	std::string programName("fft");
+	std::ofstream log_file;
 	
 	try
 	{
-		std::streambuf* backup = redirect_clog(std::string("fft.log") );
+		std::streambuf* backup = redirect_clog(std::string("fft.log"), log_file );
 
 		fftOptions opt;
 		opt.loadOptionsFromCommandLine(argc, argv);
 
 		if(opt.writeVersionToConsole(programName))
+		{
+			std::clog.rdbuf(backup);
 			return ret_ok;
+		}
 
 		if(opt.writeHelpToConsole())
+		{
+			std::clog.rdbuf(backup);
 			return ret_ok;
+		}
 
 		fftw_vector fft_vec;
 
@@ -171,14 +178,15 @@ void writeStandard(fftw_vector& fft, std::ostream* out_stream,
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::streambuf* redirect_clog(std::string log_file_base_name)
+std::streambuf* redirect_clog(std::string log_file_base_name,
+                              std::ofstream& log_file)
 {
 	std::streambuf* clog_buffer = std::clog.rdbuf();
 
 	std::string log_path( getenv("HOME") );
 	log_path += "/" + log_file_base_name;
 
-	std::ofstream log_file(log_path.c_str());
+	log_file.open(log_path.c_str());
 
 	if(log_file)
 		std::clog.rdbuf( log_file.rdbuf() );
