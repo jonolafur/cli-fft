@@ -72,23 +72,23 @@ void fftw_vector::re_alloc( std::size_t N, bool fftw_estimate)
 	FILE* wis_file = std::fopen(fftw_wizdom_file_name.c_str(), "r");
 
 	if(wis_file == 0)
-		std::cout << "Warning: failed to load wisdom. A new wisdom "
+		std::clog << "Warning: failed to load wisdom. A new wisdom "
                    "file will be generated at:\n" << fftw_wizdom_file_name << '\n';
 	else
 	{
-		std::cout << "Reading wisdom from: " << fftw_wizdom_file_name << '\n';
+		std::clog << "Reading wisdom from: " << fftw_wizdom_file_name << '\n';
 		fftw_import_wisdom_from_file(wis_file);
 		std::fclose(wis_file);
 	}
 
 	// Generating plans. We need one for the forward and the backward FFT
-	std::cout << "Generating plan for forward transformation..." << fftw_estimation_mode << std::endl;
+	std::clog << "Generating plan for forward transformation..." << fftw_estimation_mode << std::endl;
 	m_pFwdPlan  = fftw_plan_dft_1d(N, m_x, m_x, FFTW_FORWARD, m_plan_mode);
 
-	std::cout << "Generating plan for backward transformation..." << fftw_estimation_mode << std::endl;
+	std::clog << "Generating plan for backward transformation..." << fftw_estimation_mode << std::endl;
 	m_pBwdPlan = fftw_plan_dft_1d(N, m_x, m_x, FFTW_BACKWARD, m_plan_mode);
 
-	std::cout << "Finsihed generating plans." << std::endl;
+	std::clog << "Finsihed generating plans." << std::endl;
 
 	// Write gained wisdom to file for future use:
 	wis_file = std::fopen(fftw_wizdom_file_name.c_str(), "w");
@@ -101,12 +101,18 @@ void fftw_vector::re_alloc( std::size_t N, bool fftw_estimate)
 ///////////////////////////////////////////////////////////////////////////////
 void fftw_vector::fft()
 {
-	fftw_execute(m_pFwdPlan);
+	if(m_pFwdPlan)
+		fftw_execute(m_pFwdPlan);
+	else
+		throw "Attempting to perform FFT on invalid plan. Maybe the data vector was empty?";
 }
 ///////////////////////////////////////////////////////////////////////////////
 void fftw_vector::ifft()
 {
-	fftw_execute(m_pBwdPlan);
+	if(m_pBwdPlan)
+		fftw_execute(m_pBwdPlan);
+	else
+		throw "Attempting to perform IFFT on invalid plan. Maybe the data vector was empty?";
 }
 ///////////////////////////////////////////////////////////////////////////////
 void fftw_vector::normalize()
@@ -207,7 +213,7 @@ void fftw_vector::fft_filter(double bw, double f_s)
 {
 	if(bw==0.0)
 	{
-		std::cout << "Specified RF bandwidth was zero. Samples remain un-filtered." << std::endl;
+		std::clog << "Specified RF bandwidth was zero. Samples remain un-filtered." << std::endl;
 		return;
 	}
 
@@ -230,14 +236,14 @@ void fftw_vector::fft_filter(double bw, double f_s)
 
 	if(N >= m_size/2)
 	{
-		std::cout << "Warning: Specified RF bandwidth exceeds the Nyquist bandwidth. Samples remain un-filtered." << std::endl;
+		std::clog << "Warning: Specified RF bandwidth exceeds the Nyquist bandwidth. Samples remain un-filtered." << std::endl;
 		return;
 	}
 
 	for(std::size_t i=N; i<m_size-N; ++i)
 		m_x[i][0] = m_x[i][1] = 0.0;
 
-	std::cout << "First sample index deleted: " << N << '\n'
+	std::clog << "First sample index deleted: " << N << '\n'
 	          << "Last sample index deleted: " << m_size-N-1 << std::endl;
 }
 ///////////////////////////////////////////////////////////////////////////////

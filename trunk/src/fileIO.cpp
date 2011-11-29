@@ -26,6 +26,7 @@ void getColsFromFile(std::string fileName, data_columns& columns,
 	std::vector<std::string> tokenizedLine;
 	std::istream* in_stream;
 	std::ifstream in_file;
+	int line_count =0;
 
 	if(fileName.empty())
 		in_stream = &std::cin;
@@ -41,6 +42,7 @@ void getColsFromFile(std::string fileName, data_columns& columns,
 
 	while(getline(*in_stream, rawLineFromFile))
 	{
+		line_count++;
 		if( isCommentedOut(rawLineFromFile) ) continue;
 
 		tokenize(tokenizedLine, rawLineFromFile, delimiter);
@@ -48,8 +50,15 @@ void getColsFromFile(std::string fileName, data_columns& columns,
 
 		for(std::size_t i=0; i<columnIdx.size(); i++)
 		{
-			double fieldValue = boost::lexical_cast<double>( tokenizedLine[columnIdx[i]]);
-			columns[i].push_back( fieldValue );
+			try
+			{
+				double fieldValue = boost::lexical_cast<double>( tokenizedLine[columnIdx[i]]);
+				columns[i].push_back( fieldValue );
+			}
+			catch(boost::bad_lexical_cast& e)
+			{
+				std::clog << "Failed to interpret field nr.: " << columnIdx[i] << " at line nr.: " << line_count << '\n';
+			}
 		}
 	}
 }

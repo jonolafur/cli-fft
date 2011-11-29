@@ -44,6 +44,8 @@ double checkSampleTime(const std::vector<double>& t);
 void writeOrdered(fftw_vector& fft, std::ostream* out_stream, bool writeMagArg);
 void writeStandard(fftw_vector& fft, std::ostream* out_stream,
 		bool writeFirstHalfOnlyhalf, bool writeMagArg);
+std::streambuf* redirect_clog(std::string log_file_base_name);
+
 
 #endif //_RX_MAIN_H
 
