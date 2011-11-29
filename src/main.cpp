@@ -23,6 +23,8 @@ int main(int argc, char* argv[])
 	
 	try
 	{
+		std::streambuf* backup = redirect_clog(std::string("fft.log") );
+
 		fftOptions opt;
 		opt.loadOptionsFromCommandLine(argc, argv);
 
@@ -38,25 +40,27 @@ int main(int argc, char* argv[])
 		processInput(opt,fft_vec);
 		writeOutput(opt,fft_vec);
 
+		std::clog.rdbuf(backup);
+
 	}
 	catch(std::exception& e)
 	{
-		std::cerr << "Error: " << e.what() << std::endl;
+		std::clog << std::cerr << "Error: " << e.what() << std::endl;
 		ret_val = ret_error;
 	}
 	catch(std::string& s)
 	{
-		std::cerr << "Error: " << s << std::endl;
+		std::clog << std::cerr << "Error: " << s << std::endl;
 		ret_val = ret_error;
 	}
 	catch(const char* s)
 	{
-		std::cerr << "Error: " << s << std::endl;
+		std::clog << std::cerr << "Error: " << s << std::endl;
 		ret_val = ret_error;
 	}
 	catch(...)
 	{
-		std::cerr << "Exception of unknown type!\n";
+		std::clog << std::cerr << "Exception of unknown type!\n";
 		ret_val = ret_error;
 	}
 
@@ -167,7 +171,24 @@ void writeStandard(fftw_vector& fft, std::ostream* out_stream,
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
+std::streambuf* redirect_clog(std::string log_file_base_name)
+{
+	std::streambuf* clog_buffer = std::clog.rdbuf();
 
+	std::string log_path( getenv("HOME") );
+	log_path += "/" + log_file_base_name;
+
+	std::ofstream log_file(log_path.c_str());
+
+	if(log_file)
+		std::clog.rdbuf( log_file.rdbuf() );
+	else
+	{
+		std::string s = "Failed to open file: " + log_file_base_name + "for writing.";
+		throw s;
+	}
+	return clog_buffer;
+}
 
 
 
