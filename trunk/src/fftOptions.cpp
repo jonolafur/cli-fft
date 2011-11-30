@@ -9,7 +9,8 @@
 
 ///////////////////////////////////////////////////////////////////////////////
 fftOptions::fftOptions() :  programOptions(),
-   inFileName(), outFileName(), xColumn(0), yColumn(1), delimiter(' ')
+   inFileName(), outFileName(), xColumn(0), yColumn(1), delimiter(' '),
+   magnitude_phase(false), inverse(false)
 {
 	addfftOptions();
 }
@@ -40,7 +41,16 @@ void fftOptions::addfftOptions()
 	("y-values,y", po::value<int>(&yColumn)->default_value(yColumn),
 			"y-values: This column will be used for the real values of the samples to transform. "
 			"If \"complex\" values are specified, the following column (y+1) will be used "
-			"for the imaginary part.");
+			"for the imaginary part.")
+	("normalize,N", "Per default fftw does not normalize the output of the fft, that is if an FFT with "
+			"subsequent IFFT is performed, the result will be scaled by a factor of N, where N "
+			"is the number of samples. With this option the transformed result (FFT or IFFT) "
+			"is scaled by sqrt(N).");
+
+	magnitude_phase = var_map.count("magnitude-phase") !=0;
+	inverse         = var_map.count("inverse") !=0;
+
+
 }
 ///////////////////////////////////////////////////////////////////////////////
 std::vector<int> fftOptions::getZeroBasedColumnIndexes()

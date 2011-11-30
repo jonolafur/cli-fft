@@ -33,6 +33,8 @@ void getColsFromFile(std::string fileName, data_columns& columns,
 	else
 	{
 		in_file.open( fileName.c_str() );
+		if(!in_file.good())
+			throw "Failed to open file: "+fileName;
 		in_stream = &in_file;
 	}
 
@@ -57,7 +59,8 @@ void getColsFromFile(std::string fileName, data_columns& columns,
 			}
 			catch(boost::bad_lexical_cast& e)
 			{
-				std::clog << "Failed to interpret field nr.: " << columnIdx[i] << " at line nr.: " << line_count << '\n';
+				std::clog << "Failed to interpret field nr.: " << columnIdx[i]
+				          << " at line nr.: " << line_count << " in file: " << fileName << '\n';
 			}
 		}
 	}
