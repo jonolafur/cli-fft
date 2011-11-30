@@ -21,10 +21,11 @@ int main(int argc, char* argv[])
 	int ret_val = ret_ok;
 	std::string programName("fft");
 	std::ofstream log_file;
+	std::streambuf* backup=0L;
 	
 	try
 	{
-		std::streambuf* backup = redirect_clog(std::string("fft.log"), log_file );
+		backup = redirect_clog(std::string(".fft.log"), log_file );
 
 		fftOptions opt;
 		opt.loadOptionsFromCommandLine(argc, argv);
@@ -47,29 +48,29 @@ int main(int argc, char* argv[])
 		processInput(opt,fft_vec);
 		writeOutput(opt,fft_vec);
 
-		std::clog.rdbuf(backup);
-
 	}
 	catch(std::exception& e)
 	{
-		std::clog << std::cerr << "Error: " << e.what() << std::endl;
+		std::clog << "Error: " << e.what() << std::endl;
 		ret_val = ret_error;
 	}
 	catch(std::string& s)
 	{
-		std::clog << std::cerr << "Error: " << s << std::endl;
+		std::clog << "Error: " << s << std::endl;
 		ret_val = ret_error;
 	}
 	catch(const char* s)
 	{
-		std::clog << std::cerr << "Error: " << s << std::endl;
+		std::clog << "Error: " << s << std::endl;
 		ret_val = ret_error;
 	}
 	catch(...)
 	{
-		std::clog << std::cerr << "Exception of unknown type!\n";
+		std::clog << "Exception of unknown type!\n";
 		ret_val = ret_error;
 	}
+
+	std::clog.rdbuf(backup);
 
 	return ret_val;
 }
@@ -110,6 +111,9 @@ void processInput(fftOptions& opt, fftw_vector& fft_vec)
 		fft_vec.ifft();
 	else
 		fft_vec.fft();
+
+	if( opt.normalize() )
+		fft_vec.normalize();
 }
 ///////////////////////////////////////////////////////////////////////////////
 void writeOutput(fftOptions& opt, fftw_vector& fft_vec)
@@ -117,6 +121,7 @@ void writeOutput(fftOptions& opt, fftw_vector& fft_vec)
 	std::ostream* out_stream;
 	std::ofstream out_file;
 
+	// Re-direct to standard out if no filename is given:
 	if(!opt.outFileName.empty())
 	{
 		out_file.open(opt.outFileName.c_str());
@@ -126,9 +131,9 @@ void writeOutput(fftOptions& opt, fftw_vector& fft_vec)
 		out_stream = &std::cout;
 
 	if(opt.orderSamples())
-		writeOrdered(fft_vec,out_stream, opt.writeMagnitudeAndPhase());
+		writeOrdered(fft_vec,out_stream, opt);
 
-	writeStandard(fft_vec, out_stream, opt.positiveAxisOnly(), opt.writeMagnitudeAndPhase() );
+	writeStandard(fft_vec, out_stream, opt );
 
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -143,39 +148,39 @@ double checkSampleTime(const std::vector<double>& t)
 	return dt;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void writeOrdered(fftw_vector& fft, std::ostream* out_stream, bool writeMagArg)
+void writeOrdered(fftw_vector& fft, std::ostream* out_stream, const fftOptions& opt)
 {
-	std::size_t N = fft.size();
-	int iN = static_cast<int>(N);
-	double x, y;
+	int N = static_cast<int>(fft.size());
 
 	// The negative half-axis:
-	for(std::size_t i=N/2; i<N; i++)
-	{
-		fft.getSample(x,y,i,writeMagArg);
-		(*out_stream) << fft.frequency(i-iN) << ' ' << x << ' ' << y << '\n';
-	}
+	for(int i=N/2; i<N; i++)
+		writeSample(i, N, fft,  out_stream, opt);
 
-	for(std::size_t i=0; i<N/2; i++)
-	{
-		fft.getSample(x,y,i,writeMagArg);
-		(*out_stream) << fft.frequency(i) << ' ' << x << ' ' << y << '\n';
-	}
+	for(int i=0; i<N/2; i++)
+		writeSample(i, 0, fft,  out_stream, opt);
 }
 ///////////////////////////////////////////////////////////////////////////////
-void writeStandard(fftw_vector& fft, std::ostream* out_stream,
-		bool writeFirstHalfOnlyhalf, bool writeMagArg)
+void writeStandard(fftw_vector& fft, std::ostream* out_stream, const fftOptions& opt)
 {
-	std::size_t N = fft.size();
-	double x, y;
+	int N = static_cast<int>(fft.size());
 
-	if(writeFirstHalfOnlyhalf) N/=2;
+	if( opt.positiveAxisOnly() ) N/=2;
 
-	for(std::size_t i=0; i<N; i++)
-	{
-		fft.getSample(x,y,i,writeMagArg);
-		(*out_stream) << fft.frequency(i) << ' '<< x << ' ' << y << '\n';
-	}
+	for(int i=0; i<N; i++)
+		writeSample(i, 0, fft,  out_stream, opt);
+}
+///////////////////////////////////////////////////////////////////////////////
+void writeSample(int idx, int offset, fftw_vector& fft, std::ostream* out_stream, const fftOptions& opt)
+{
+	double a,x,y;
+
+	if(opt.inverseFFT())
+		a = fft.frequency(idx-offset);
+	else
+		a = fft.time(idx-offset);
+
+	fft.getSample(x,y,idx,opt.writeMagnitudeAndPhase() );
+	(*out_stream) << a << ' ' << x << ' ' << y << '\n';
 }
 ///////////////////////////////////////////////////////////////////////////////
 std::streambuf* redirect_clog(std::string log_file_base_name,

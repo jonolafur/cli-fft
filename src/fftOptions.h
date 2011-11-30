@@ -17,6 +17,8 @@ public:
 	int xColumn;
 	int yColumn;
 	char delimiter;
+	bool magnitude_phase;
+	bool inverse;
 
 public:
 	fftOptions();
@@ -24,12 +26,14 @@ public:
 
 	std::vector<int> getZeroBasedColumnIndexes();
 	std::string getDelimiterAsString();
-	bool isComplex(){return var_map.count("complex");}
-	bool inverseFFT(){return var_map.count("inverse");}
-	bool xAxisSpecified(){return xColumn!=0;}
-	bool orderSamples(){return (var_map.count("ordered-x-axis") && !positiveAxisOnly() );}
-	bool positiveAxisOnly(){return ( var_map.count("positive-only") && !isComplex() );}
-	bool writeMagnitudeAndPhase(){return var_map.count("magnitude-phase");}
+	bool isComplex() const {return var_map.count("complex");}
+	bool xAxisSpecified() const {return xColumn!=0;}
+	bool orderSamples() const {return (var_map.count("ordered-x-axis") && !positiveAxisOnly() );}
+	bool positiveAxisOnly() const {return ( var_map.count("positive-only") && !isComplex() );}
+	bool normalize() const {return var_map.count("normalize");}
+
+	bool writeMagnitudeAndPhase() const {return magnitude_phase;}
+	bool inverseFFT() const {return inverse;}
 
 protected:
 	void addfftOptions();

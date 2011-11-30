@@ -200,10 +200,10 @@ void fftw_vector::mult_conjugate(const fftw_complex& p, bool conjugate)
 void fftw_vector::setSampleTime(double dt)
 {
 	if(dt < std::numeric_limits<double>::epsilon() )
-		throw "setSampleTime: too small sample time!";
+		throw "fftw_vector::setSampleTime: too small sample time!";
 
-	if(size() ==0 )
-		throw "setSampleTime: fftw vector is empty. Cannot set sample size.";
+	if(size() == 0 )
+		throw "fftw_vector::setSampleTime: Sample vector is empty. Cannot set sample size.";
 
 	m_Dt = dt;
 	m_Df = 1.0/( m_Dt*static_cast<double>(size()) );
