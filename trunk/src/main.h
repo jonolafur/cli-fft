@@ -39,7 +39,7 @@ namespace po = boost::program_options;
 void readInput(fftOptions& opt, fftw_vector& fft_vec);
 void processInput(fftOptions& opt, fftw_vector& fft_vec);
 void writeOutput(fftOptions& opt, fftw_vector& fft_vec);
-double checkSampleTime(const std::vector<double>& t);
+double checkSampleDelta(const std::vector<double>& t);
 void writeOrdered(fftw_vector& fft, std::ostream* out_stream,
                   const fftOptions& opt);
 void writeStandard(fftw_vector& fft, std::ostream* out_stream,

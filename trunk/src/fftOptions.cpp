@@ -8,11 +8,15 @@
 #include "fftOptions.h"
 
 ///////////////////////////////////////////////////////////////////////////////
-fftOptions::fftOptions() :  programOptions(),
+fftOptions::fftOptions(int argc, char* argv[]) :  programOptions(),
    inFileName(), outFileName(), xColumn(0), yColumn(1), delimiter(' '),
    magnitude_phase(false), inverse(false)
 {
 	addfftOptions();
+	loadOptionsFromCommandLine(argc, argv);
+
+	magnitude_phase = var_map.count("magnitude-phase") !=0;
+	inverse         = var_map.count("inverse") !=0;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void fftOptions::addfftOptions()
@@ -32,7 +36,7 @@ void fftOptions::addfftOptions()
 			"information. This option suppresses the negative frequencies in the output if the input data is real.")
 	("magnitude-phase,M","Output format: Writes the magnitude and phase to the output, "
 			"rather than real and imaginary components.")
-	("inverse,I","Perform an inverse fft rather than a forward FFT.")
+	("inverse,I", "Perform an inverse fft rather than a forward FFT.")
 	("complex,c","Perform transformations on complex data.")
 	("x-values,x", po::value<int>(&xColumn)->default_value(xColumn),
 			"x-values: fft will infer the frequency from the first two elements. "
@@ -46,11 +50,6 @@ void fftOptions::addfftOptions()
 			"subsequent IFFT is performed, the result will be scaled by a factor of N, where N "
 			"is the number of samples. With this option the transformed result (FFT or IFFT) "
 			"is scaled by sqrt(N).");
-
-	magnitude_phase = var_map.count("magnitude-phase") !=0;
-	inverse         = var_map.count("inverse") !=0;
-
-
 }
 ///////////////////////////////////////////////////////////////////////////////
 std::vector<int> fftOptions::getZeroBasedColumnIndexes()

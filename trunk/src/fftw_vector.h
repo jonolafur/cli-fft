@@ -60,6 +60,7 @@ public:
 	void ifft();
 	void fft_filter(double bw, double f_s);
 	void setSampleTime(double dt);
+	void setSampleFrequency(double df);
 	bool full(){return m_idx == m_size;}
 
 	std::size_t size() const {return m_size;}

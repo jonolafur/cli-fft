@@ -209,6 +209,18 @@ void fftw_vector::setSampleTime(double dt)
 	m_Df = 1.0/( m_Dt*static_cast<double>(size()) );
 }
 ///////////////////////////////////////////////////////////////////////////////
+void fftw_vector::setSampleFrequency(double df)
+{
+	if(df < std::numeric_limits<double>::epsilon() )
+		throw "fftw_vector::setSampleFrequency: too small sample frequency!";
+
+	if(size() == 0 )
+		throw "fftw_vector::setSampleFrequency: Sample vector is empty. Cannot set sample frequency.";
+
+	m_Df = df;
+	m_Dt = 1.0/( m_Df*static_cast<double>(size()) );
+}
+///////////////////////////////////////////////////////////////////////////////
 void fftw_vector::fft_filter(double bw, double f_s)
 {
 	if(bw==0.0)
