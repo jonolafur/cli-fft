@@ -15,6 +15,7 @@ void generateFile(std::string fileName, int numLines)
 			<< " with " << numLines<< " entries." << std::endl;
 
 	std::ofstream out( fileName.c_str() );
+	out.precision(12);
 
 	out << "# Starting off with a comment\n";
 
@@ -22,7 +23,7 @@ void generateFile(std::string fileName, int numLines)
 	double w = 2.0*3.141567;
 	for(int i=0; i<numLines; i++, t+=0.011)
 	{
-		out << i << ' ' << t << ' '
+		out << t << ' '
 	          << 0.1 + cos(w*t) +2.3*sin(2*w*t) << ' '
 	          << 0.1 + sin(w*t) +2.3*cos(2*w*t) << ' '
 	          << cos(w*t*t) << ' ' << sin(w*t*t*2.0) << std::endl;

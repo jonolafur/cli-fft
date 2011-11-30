@@ -71,14 +71,12 @@ add_test( Test_fft_inverse ${CMAKE_BINARY_DIR}/fft -I -x 1 -y 2 -c -N
                          -i ${CMAKE_BINARY_DIR}/tests/Test_fft_std_in_out.txt 
                          -o ${CMAKE_BINARY_DIR}/tests/Test_fft_inverse.txt )
 
-#add_test(Test_Rx_L1_Compare ${CMAKE_BINARY_DIR}/ascii_compare
-#               -t ${CMAKE_CURRENT_BINARY_DIR}/Test_Rx_L1_corr.txt
-#                -r ${CMAKE_CURRENT_BINARY_DIR}/ref-data/Test_Rx_L1_corr.txt
-#               -C 0 -d 1e-6 -D 1e-6
-#                -C 1 -d 1e-6 -D 1e-6
-#                -C 2 -d 1e-6 -D 1e-6
-#                -C 3 -d 1e-6 -D 1e-6
-#                -C 4 -d 1e-6 -D 1e-6)
+add_test(Test_fft_inverse_Compare ${CMAKE_BINARY_DIR}/ascii_compare
+               -t ${CMAKE_BINARY_DIR}/tests/Test_read_file.txt
+               -r ${CMAKE_BINARY_DIR}/tests/Test_fft_inverse.txt
+               -C 0 -d 1e-6 -D 1e-6
+                -C 1 -d 1e-6 -D 1e-6
+                -C 2 -d 1e-6 -D 1e-6 )
 
 
 

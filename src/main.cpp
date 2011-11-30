@@ -27,8 +27,7 @@ int main(int argc, char* argv[])
 	{
 		backup = redirect_clog(std::string(".fft.log"), log_file );
 
-		fftOptions opt;
-		opt.loadOptionsFromCommandLine(argc, argv);
+		fftOptions opt(argc, argv);
 
 		if(opt.writeVersionToConsole(programName))
 		{
@@ -98,10 +97,13 @@ void readInput(fftOptions& opt, fftw_vector& fft_vec)
 			fft_vec.set_samples(fft_data[0], false);
 	}
 
-	if(!opt.inverseFFT() && opt.xAxisSpecified())
+	if(opt.xAxisSpecified())
 	{
-		double dt =  checkSampleTime(fft_data[0]);
-		fft_vec.setSampleTime(dt);
+		double dx =  checkSampleDelta(fft_data[0]);
+		if(opt.inverseFFT())
+			fft_vec.setSampleFrequency(dx);
+		else
+			fft_vec.setSampleTime(dx);
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -130,6 +132,8 @@ void writeOutput(fftOptions& opt, fftw_vector& fft_vec)
 	else
 		out_stream = &std::cout;
 
+	(*out_stream).precision(12);
+
 	if(opt.orderSamples())
 		writeOrdered(fft_vec,out_stream, opt);
 
@@ -137,7 +141,7 @@ void writeOutput(fftOptions& opt, fftw_vector& fft_vec)
 
 }
 ///////////////////////////////////////////////////////////////////////////////
-double checkSampleTime(const std::vector<double>& t)
+double checkSampleDelta(const std::vector<double>& t)
 {
 	std::size_t N = t.size();
 	if(N<2) throw "Error: less than two samples in checkSampleTime.\n";
@@ -167,17 +171,19 @@ void writeStandard(fftw_vector& fft, std::ostream* out_stream, const fftOptions&
 	if( opt.positiveAxisOnly() ) N/=2;
 
 	for(int i=0; i<N; i++)
-		writeSample(i, 0, fft,  out_stream, opt);
+		writeSample(i, 0, fft, out_stream, opt);
 }
 ///////////////////////////////////////////////////////////////////////////////
 void writeSample(int idx, int offset, fftw_vector& fft, std::ostream* out_stream, const fftOptions& opt)
 {
 	double a,x,y;
 
+	// If an IFFT was performed, the assumption is that the horizontal axis of
+	// the _output_ (i.e. _after_ the transformation) is a time coordinate
 	if(opt.inverseFFT())
-		a = fft.frequency(idx-offset);
-	else
 		a = fft.time(idx-offset);
+	else // Otherwise it is assumed to be a frequency coordinate.
+		a = fft.frequency(idx-offset);
 
 	fft.getSample(x,y,idx,opt.writeMagnitudeAndPhase() );
 	(*out_stream) << a << ' ' << x << ' ' << y << '\n';

@@ -21,7 +21,7 @@ public:
 	bool inverse;
 
 public:
-	fftOptions();
+	fftOptions(int argc, char* argv[]);
 	virtual ~fftOptions(){};
 
 	std::vector<int> getZeroBasedColumnIndexes();
