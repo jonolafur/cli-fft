@@ -193,9 +193,19 @@ std::streambuf* redirect_clog(std::string log_file_base_name,
                               std::ofstream& log_file)
 {
 	std::streambuf* clog_buffer = std::clog.rdbuf();
+	bool readHomePathOk=false;
+	std::string log_path;
 
-	std::string log_path( getenv("HOME") );
-	log_path += "/" + log_file_base_name;
+	char* homePath = getenv("HOME");
+
+	if(homePath)
+	{
+		readHomePathOk=true;
+		log_path = std::string( homePath );
+		log_path += "/" + log_file_base_name;
+	}
+	else
+		log_path = log_file_base_name;
 
 	log_file.open(log_path.c_str());
 
@@ -206,6 +216,10 @@ std::streambuf* redirect_clog(std::string log_file_base_name,
 		std::string s = "Failed to open file: " + log_file_base_name + "for writing.";
 		throw s;
 	}
+
+	if(!readHomePathOk)	// Delaying writing to log until it has been re-dirceted to the file.
+		std::clog << "Unable to retrieve home path. writing log to current directory.";
+
 	return clog_buffer;
 }
 

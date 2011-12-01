@@ -26,11 +26,11 @@ public:
 
 	std::vector<int> getZeroBasedColumnIndexes();
 	std::string getDelimiterAsString();
-	bool isComplex() const {return var_map.count("complex");}
+	bool isComplex() const {return var_map.count("complex")!=0;}
 	bool xAxisSpecified() const {return xColumn!=0;}
-	bool orderSamples() const {return (var_map.count("ordered-x-axis") && !positiveAxisOnly() );}
-	bool positiveAxisOnly() const {return ( var_map.count("positive-only") && !isComplex() );}
-	bool normalize() const {return var_map.count("normalize");}
+	bool orderSamples() const {return (var_map.count("ordered-x-axis")!=0 && !positiveAxisOnly() );}
+	bool positiveAxisOnly() const {return ( var_map.count("positive-only")!=0 && !isComplex() );}
+	bool normalize() const {return var_map.count("normalize")!=0;}
 
 	bool writeMagnitudeAndPhase() const {return magnitude_phase;}
 	bool inverseFFT() const {return inverse;}

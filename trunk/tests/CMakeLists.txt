@@ -51,14 +51,14 @@ endforeach (test)
 ####################################################################################
 ## Adding tests that call the project executable (i.e. Rx and Tx)
 # Generating a CASM L1 signal:
-add_test(NAME Test_fft_help COMMAND fft -? )
+add_test(Test_fft_help ${CMAKE_BINARY_DIR}/fft -? )
 
 ## The test above shall return a message including the relevant peak detection:
 set_tests_properties(Test_fft_help
                      PROPERTIES PASS_REGULAR_EXPRESSION
                      "Produce help message")
 
-add_test(NAME Test_fft_version COMMAND fft -v )
+add_test(Test_fft_version ${CMAKE_BINARY_DIR}/fft -v )
 
 ## The test above shall return a message including the relevant peak detection:
 set_tests_properties(Test_fft_version

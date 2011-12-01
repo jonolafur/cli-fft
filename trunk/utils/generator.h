@@ -22,7 +22,7 @@
 #include <boost/random.hpp>
 #include <boost/lexical_cast.hpp>
 
+#include "milli_sleep.h"
 ///////////////////////////////////////////////////////////////////////////////
-
 
 #endif /* GENERATOR_H_ */

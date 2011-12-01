@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
  			w_0 = 3.5*two_pi;
 
 		if(N==0)
-			usleep(200);
+			milli_sleep(1);
 		else
 			if(N==(++i)) break;
 	}
