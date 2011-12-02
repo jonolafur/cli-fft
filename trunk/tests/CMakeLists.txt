@@ -65,7 +65,7 @@ set_tests_properties(Test_fft_version
                      PROPERTIES PASS_REGULAR_EXPRESSION
                      "This is fft, version:")
 
-add_test( Test_fft_std_in_out ${CMAKE_SOURCE_DIR}/tests/Test_std_in_out.bash )
+add_test( Test_fft_std_in_out ${CMAKE_SOURCE_DIR}/tests/Test_std_in_out.py )
 
 add_test( Test_fft_inverse ${CMAKE_BINARY_DIR}/fft -I -x 1 -y 2 -c -N
                          -i ${CMAKE_BINARY_DIR}/tests/Test_fft_std_in_out.txt 
