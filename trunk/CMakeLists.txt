@@ -99,6 +99,8 @@ find_library( LIB_FFTW
 
 message(STATUS "Will link against FFTW3 library found in: ${LIB_FFTW}" )
 
+find_package( PythonInterp )
+
 ####################################################################################
 ### Adding sources #################################################################
 set( VER_DES ${CMAKE_CURRENT_BINARY_DIR} )
