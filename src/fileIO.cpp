@@ -34,7 +34,7 @@ void getColsFromFile(std::string fileName, data_columns& columns,
 	{
 		in_file.open( fileName.c_str() );
 		if(!in_file.good())
-			throw "Failed to open file: "+fileName;
+			throw "Failed to open input file: "+fileName+"\n";
 		in_stream = &in_file;
 	}
 

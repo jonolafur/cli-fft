@@ -22,6 +22,7 @@
 // Boost headers:
 #include <boost/program_options.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 // Fastest Fourier transform in the West:
 #include <fftw3.h>  // Include Fast Fourier Transform Library
@@ -34,6 +35,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 // short hand for program option name space...
 namespace po = boost::program_options;
+namespace bpt = boost::posix_time;
 
 ///////////////////////////////////////////////////////////////////////////////
 void readInput(fftOptions& opt, fftw_vector& fft_vec);
@@ -46,7 +48,7 @@ void writeStandard(fftw_vector& fft, std::ostream* out_stream,
                    const fftOptions& opt);
 std::streambuf* redirect_clog(std::string log_file_base_name, std::ofstream& log_file);
 void writeSample(int idx, int offset, fftw_vector& fft, std::ostream* out_stream, const fftOptions& opt);
-
+void logHistory( int a, char* av[] );
 
 #endif //_RX_MAIN_H
 
