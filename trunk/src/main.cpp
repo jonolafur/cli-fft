@@ -27,6 +27,8 @@ int main(int argc, char* argv[])
 	{
 		backup = redirect_clog(std::string(".fft.log"), log_file );
 
+		logHistory(argc, argv);
+
 		fftOptions opt(argc, argv);
 
 		if(opt.writeVersionToConsole(programName))
@@ -213,16 +215,26 @@ std::streambuf* redirect_clog(std::string log_file_base_name,
 		std::clog.rdbuf( log_file.rdbuf() );
 	else
 	{
-		std::string s = "Failed to open file: " + log_file_base_name + "for writing.";
+		std::string s = "Failed to open file: " + log_file_base_name + "for writing.\n";
 		throw s;
 	}
 
 	if(!readHomePathOk)	// Delaying writing to log until it has been re-dirceted to the file.
-		std::clog << "Unable to retrieve home path. writing log to current directory.";
+		std::clog << "Unable to retrieve home path. Writing log to current directory.\n";
 
 	return clog_buffer;
 }
+///////////////////////////////////////////////////////////////////////////////
+void logHistory( int a, char* av[] )
+{
+	bpt::ptime t(bpt::second_clock::local_time());
 
+	std::clog << "# " << t << std::endl;
+	// Print out the options, skip the program name...
+	for(int i=1; i<a;++i)
+		std::clog << av[i] << ' ';
+	std::clog << std::endl;
+}
 
 
 

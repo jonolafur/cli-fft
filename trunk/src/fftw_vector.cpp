@@ -22,7 +22,6 @@ fftw_vector::~fftw_vector()
 void fftw_vector::re_alloc( std::size_t N, bool fftw_estimate)
 {
 	std::string fftw_estimation_mode;
-
 	m_idx = 0;   // reset internal index
 	
 	if(N==0) // If user allocates zero samples, we just free memory and return
@@ -66,20 +65,21 @@ void fftw_vector::re_alloc( std::size_t N, bool fftw_estimate)
 	// accumulates in this file.
 
 	// Loading wizdom from file:
-	std::string fftw_wizdom_file_name( getenv("HOME") );
-	fftw_wizdom_file_name += "/.fftw_wizdom";
+	char* fftw_wiz_path = getenv("HOME");
+	std::string fftw_wizdom_file_name;
 
-	FILE* wis_file = std::fopen(fftw_wizdom_file_name.c_str(), "r");
-
-	if(wis_file == 0)
-		std::clog << "Warning: failed to load wisdom. A new wisdom "
-                   "file will be generated at:\n" << fftw_wizdom_file_name << '\n';
+	if(fftw_wiz_path)
+		fftw_wizdom_file_name = std::string( fftw_wiz_path )+"/";
 	else
-	{
-		std::clog << "Reading wisdom from: " << fftw_wizdom_file_name << '\n';
-		fftw_import_wisdom_from_file(wis_file);
-		std::fclose(wis_file);
-	}
+		std::clog << "Warning: Unable to retrieve home path. Writing .fftw_wizdom into current directory.\n";
+
+	fftw_wizdom_file_name += ".fftw_wizdom";
+
+	if(fftw_import_wisdom_from_filename(fftw_wizdom_file_name.c_str() ) )
+		std::clog << "Successfully read wisdom from: " << fftw_wizdom_file_name << '\n';
+	else
+		std::clog << "Warning: failed to load wisdom. Will attempt to generate new wizdom file at: "
+                  << fftw_wizdom_file_name << '\n';
 
 	// Generating plans. We need one for the forward and the backward FFT
 	std::clog << "Generating plan for forward transformation..." << fftw_estimation_mode << std::endl;
@@ -91,12 +91,10 @@ void fftw_vector::re_alloc( std::size_t N, bool fftw_estimate)
 	std::clog << "Finsihed generating plans." << std::endl;
 
 	// Write gained wisdom to file for future use:
-	wis_file = std::fopen(fftw_wizdom_file_name.c_str(), "w");
-	if(wis_file!=0)
-	{
-		fftw_export_wisdom_to_file(wis_file);
-		std::fclose(wis_file);
-	}
+	if(fftw_export_wisdom_to_filename( fftw_wizdom_file_name.c_str() ) )
+		std::clog << "Successfully wrote wisdom to: " << fftw_wizdom_file_name << '\n';
+	else
+		std::clog << "Warning: failed to write wisdom to: " << fftw_wizdom_file_name << '\n';
 }
 ///////////////////////////////////////////////////////////////////////////////
 void fftw_vector::fft()
@@ -104,7 +102,7 @@ void fftw_vector::fft()
 	if(m_pFwdPlan)
 		fftw_execute(m_pFwdPlan);
 	else
-		throw "Attempting to perform FFT on invalid plan. Maybe the data vector was empty?";
+		throw "Attempting to perform FFT on invalid plan. Maybe the data vector was empty?\n";
 }
 ///////////////////////////////////////////////////////////////////////////////
 void fftw_vector::ifft()
@@ -112,7 +110,7 @@ void fftw_vector::ifft()
 	if(m_pBwdPlan)
 		fftw_execute(m_pBwdPlan);
 	else
-		throw "Attempting to perform IFFT on invalid plan. Maybe the data vector was empty?";
+		throw "Attempting to perform IFFT on invalid plan. Maybe the data vector was empty?\n";
 }
 ///////////////////////////////////////////////////////////////////////////////
 void fftw_vector::normalize()
@@ -163,7 +161,7 @@ void fftw_vector::getSample(double& x, double& y, int idx, bool polar_coord)
 void fftw_vector::mult_conjugate(fftw_vector& p, bool conjugate)
 {
 	if(size() != p.size())
-		throw "Unequal sizes in fftw_vector::mult_conjugate(...)";
+		throw "Unequal sizes in fftw_vector::mult_conjugate(...)\n";
 
 	// We need to keep track of z[0] because it gets overwritten in the first
 	// line and is needed in the second. In case the function is called like:
@@ -200,10 +198,10 @@ void fftw_vector::mult_conjugate(const fftw_complex& p, bool conjugate)
 void fftw_vector::setSampleTime(double dt)
 {
 	if(dt < std::numeric_limits<double>::epsilon() )
-		throw "fftw_vector::setSampleTime: too small sample time!";
+		throw "fftw_vector::setSampleTime: too small sample time!\n";
 
 	if(size() == 0 )
-		throw "fftw_vector::setSampleTime: Sample vector is empty. Cannot set sample size.";
+		throw "fftw_vector::setSampleTime: Sample vector is empty. Cannot set sample size.\n";
 
 	m_Dt = dt;
 	m_Df = 1.0/( m_Dt*static_cast<double>(size()) );
@@ -212,10 +210,10 @@ void fftw_vector::setSampleTime(double dt)
 void fftw_vector::setSampleFrequency(double df)
 {
 	if(df < std::numeric_limits<double>::epsilon() )
-		throw "fftw_vector::setSampleFrequency: too small sample frequency!";
+		throw "fftw_vector::setSampleFrequency: too small sample frequency!\n";
 
 	if(size() == 0 )
-		throw "fftw_vector::setSampleFrequency: Sample vector is empty. Cannot set sample frequency.";
+		throw "fftw_vector::setSampleFrequency: Sample vector is empty. Cannot set sample frequency.\n";
 
 	m_Df = df;
 	m_Dt = 1.0/( m_Df*static_cast<double>(size()) );
