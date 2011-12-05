@@ -37,7 +37,7 @@ void fftOptions::addfftOptions()
 	("magnitude-phase,M","Output format: Writes the magnitude and phase to the output, "
 			"rather than real and imaginary components.")
 	("inverse,I", "Perform an inverse fft rather than a forward FFT.")
-	("complex,c","Perform transformations on complex data.")
+	("complex,c","Perform transformations on complex data. See -y option below.")
 	("x-values,x", po::value<int>(&xColumn)->default_value(xColumn),
 			"x-values: fft will infer the frequency from the first two elements. "
 			"If a non-uniformity is detected, fft will exit. The column numbering is 1-based."
@@ -49,7 +49,8 @@ void fftOptions::addfftOptions()
 	("normalize,N", "Per default fftw does not normalize the output of the fft, that is if an FFT with "
 			"subsequent IFFT is performed, the result will be scaled by a factor of N, where N "
 			"is the number of samples. With this option the transformed result (FFT or IFFT) "
-			"is scaled by sqrt(N).");
+			"is normalized by sqrt(N), thus ensuring that after an FFT-IFFT cycle the "
+                        "identical result is obtained");
 }
 ///////////////////////////////////////////////////////////////////////////////
 std::vector<int> fftOptions::getZeroBasedColumnIndexes()
