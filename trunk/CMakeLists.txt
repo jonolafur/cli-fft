@@ -81,7 +81,11 @@ message(STATUS "Copying version file template from: ${VER_TMPL}")
 # Find the include path to FFTW3 (I think cmake searches in the standard path
 # by default, but anyway...)
 find_path( INCLUDE_FFTW fftw3.h
-           PATHS /usr/include c:/fftw3 c:/fftw )
+           PATHS
+           /usr/local/include
+           /usr/include
+           c:/fftw3
+           c:/fftw )
 
 message(STATUS "Using FFTW3 include directory: ${INCLUDE_FFTW} ")
 
