@@ -3,7 +3,7 @@
 ## somewhat awkward wrapper to test the re-directing supported be fft:
 import sys, subprocess, os
 
-fft_command = sys.argv[1]+"/debug/fft"
+fft_command = sys.argv[1]+"/fft"
 test_file_in=sys.argv[1]+"/tests/Test_read_file.txt"
 test_file_out=sys.argv[1]+"/tests/Test_fft_std_in_out.txt"
 
