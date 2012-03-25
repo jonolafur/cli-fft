@@ -4,7 +4,7 @@ project(fft)
 
 enable_testing()
 
-set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(BUILD_UTILS "build_utils")
 
 if(CMAKE_COMPILER_IS_GNUCXX)
@@ -56,7 +56,7 @@ set( BOOST_INCLUDEDIR "~/bin/boost/" )
 
 find_package( Boost COMPONENTS program_options REQUIRED)
 
-set(Boost_USE_STATIC_LIBS   ON)
+set(Boost_USE_STATIC_LIBS ON)
 
 message(STATUS "Include boost:  ${BOOST_INCLUDEDIR}" )
 message(STATUS "Will link to Boost: ${Boost_LIBRARIES}" )
@@ -93,7 +93,7 @@ message(STATUS "Using FFTW3 include directory: ${INCLUDE_FFTW} ")
 # On red hat you need to specify lib64 explicitly. On Ubuntu there is a
 # sym-link to lib64 from lib on 64 bit platforms.
 find_library( LIB_FFTW
-              NAMES fftw3 libfftw3-3
+              NAMES fftw3 libfftw3-3 libfftw3
               PATHS /usr/lib
                     /usr/lib64
                     /lib
