@@ -82,7 +82,7 @@ void readInput(fftOptions& opt, fftw_vector& fft_vec)
 
 	std::vector<int> colIdx = opt.getZeroBasedColumnIndexes();
 
-	getColsFromFile(opt.inFileName, fft_data, colIdx, opt.getDelimiterAsString() );
+	getColsFromFile(opt.inputFile(), fft_data, colIdx, opt.getDelimiterAsString() );
 
 	if(opt.isComplex())
 	{
@@ -126,9 +126,9 @@ void writeOutput(fftOptions& opt, fftw_vector& fft_vec)
 	std::ofstream out_file;
 
 	// Re-direct to standard out if no filename is given:
-	if(!opt.outFileName.empty())
+	if(!opt.outputFile().empty())
 	{
-		out_file.open(opt.outFileName.c_str());
+		out_file.open(opt.outputFile().c_str());
 		out_stream = &out_file;
 	}
 	else
@@ -219,7 +219,7 @@ std::streambuf* redirect_clog(std::string log_file_base_name,
 		throw s;
 	}
 
-	if(!readHomePathOk)	// Delaying writing to log until it has been re-dirceted to the file.
+	if(!readHomePathOk)	// Delaying writing to log until it has been re-directed to the file.
 		std::clog << "Unable to retrieve home path. Writing log to current directory.\n";
 
 	return clog_buffer;

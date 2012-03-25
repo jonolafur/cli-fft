@@ -18,8 +18,8 @@ copy_dir("${CMAKE_CURRENT_SOURCE_DIR}/ref-data" "${CMAKE_CURRENT_BINARY_DIR}/ref
 # The name of the list is Test,
 # the test driver is test_driver. The files implementing the actual
 # tests follow. Each test file must contain one function named
-# after the file name. E.g.: Test_spline.cpp contains a function
-# like: int Test_spline(int argc, char* argv[]).
+# after the file name. E.g.: Test_read_file.cpp contains a function
+# like: int Test_read_file(int argc, char* argv[]).
 create_test_sourcelist( Tests
 	${TEST_DRIVER_NAME}.cpp
 	Test_get_field.cpp
