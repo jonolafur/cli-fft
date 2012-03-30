@@ -16,11 +16,7 @@ add_executable (${BIN_NAME}
 # program_options library file from boost (the program_options
 # component from the boost package in cmake speak)
 
-if(WIN32)
-  target_link_libraries( ${BIN_NAME} )
-else(WIN32)
-  target_link_libraries( ${BIN_NAME} )
-endif(WIN32)
+target_link_libraries( ${BIN_NAME} )
 
 install( TARGETS ${BIN_NAME} DESTINATION ${INST_DIR} )
 message( STATUS "${BIN_NAME} will install to ${INST_DIR}" )
