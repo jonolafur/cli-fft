@@ -51,8 +51,9 @@ endmacro(COPY_DIR)
 # Note that this didn't seem to quite work on frigg as during make the
 # gcc tried to include the boost headers from /usr/include.
 
-set( BOOST_ROOT "~/bin/boost/" )
-set( BOOST_INCLUDEDIR "~/bin/boost/" )
+#set( BOOST_ROOT "C:/boost/" )
+#set( BOOST_INCLUDEDIR "~/bin/boost/" )
+#set( BOOST_LIBRARYDIR "C:/boost/lib" )
 
 find_package( Boost COMPONENTS program_options REQUIRED)
 
@@ -112,7 +113,8 @@ set( BIN_NAME fft )
 set( INST_DIR ~/bin )
 
 include_directories ( ${VER_DES} 
-                      ${INCLUDE_FFTW} )
+                      ${INCLUDE_FFTW} 
+					  ${Boost_INCLUDE_DIR} )
 
 message(STATUS "Calling SVN version tool from: ${CMAKE_CURRENT_SOURCE_DIR}")
 
@@ -148,11 +150,11 @@ add_executable (${BIN_NAME}
 # program_options library file from boost (the program_options
 # component from the boost package in cmake speak)
 
-if(WIN32)
+if(MSVC)
   target_link_libraries( ${BIN_NAME} ${LIB_FFTW} )
-else(WIN32)
+else(MSVC)
   target_link_libraries( ${BIN_NAME} ${LIB_FFTW} ${Boost_LIBRARIES} )
-endif(WIN32)
+endif(MSVC)
 
 install( TARGETS ${BIN_NAME} DESTINATION ${INST_DIR} )
 message( STATUS "${BIN_NAME} will install to ${INST_DIR}" )

@@ -24,8 +24,8 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 # Note that this didn't seem to quite work on frigg as during make the
 # gcc tried to include the boost headers from /usr/include.
 
-set( BOOST_ROOT "~/bin/boost/" )
-set( BOOST_INCLUDEDIR "~/bin/boost/" )
+#set( BOOST_ROOT "~/bin/boost/" )
+#set( BOOST_INCLUDEDIR "~/bin/boost/" )
 
 find_package( Boost COMPONENTS program_options REQUIRED)
 
@@ -93,11 +93,11 @@ message(STATUS "### I think ctest will search this location automatically, but I
 # program_options library file from boost (the program_options
 # component from the boost package in cmake speak)
 
-if(WIN32)
-  target_link_libraries(${BIN_NAME} )
-else(WIN32)
-  target_link_libraries(${BIN_NAME} ${Boost_LIBRARIES} )
-endif(WIN32)
+if(MSVC)
+  target_link_libraries( ${BIN_NAME} )
+else(MSVC)
+  target_link_libraries( ${BIN_NAME} ${Boost_LIBRARIES} )
+endif(MSVC)
 
 add_subdirectory (test)
 
