@@ -1,0 +1,23 @@
+2011-12-05:
+------------------------------------------------------------------------
+FFTW 3.3: Ran into some problems with reading and writing wisdom files of fftw. Switched to new interface: fftw 3.3. This is a relatively new interface provided in fftw 3.3. Earlier versions of fftw (such as the ones now being shipped with Ubuntu 11.10) do not contain this. Thus, make sure you get the right fftw version and compile and install it before building.
+------------------------------------------------------------------------
+Write command line history to log file: The command line is now written to the log file at the beginning.
+------------------------------------------------------------------------
+Adding a python script for calling fft with re-direction (cmake appears not to support that). Python so that we can call this under windows as well. 
+------------------------------------------------------------------------
+Re-direct all user feed-back to log file: fft attempts to write a log file (.fft.log) to the user's home directory. If fft cannot retrieve the home directory, the log file is written to the current directory.
+------------------------------------------------------------------------
+Added test to compare the results before and after and FFT-IFFT cycle (should be the same)
+Added a function to handle the scaling of the horizontal axis of the result.
+Corrected error in fftOptions. Now the standard constructor is gone. A new constructor that takes argv arguments and immediately parses the command line. 
+------------------------------------------------------------------------
+Added new option: normalized
+Throw exception when file open fails
+------------------------------------------------------------------------
+Replacing boost tokenizer with boost::algorithm::split for tokenizing strings
+Updated Test_get_field to reflect more realistic tokens (decimal point scientific notation)
+------------------------------------------------------------------------
+Various other bug fixes, see svn log for details...
+------------------------------------------------------------------------
+
