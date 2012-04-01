@@ -76,8 +76,9 @@ public:
 	fftw_complex& operator[](std::size_t i){return m_x[i];}
 
 	// Element-wise complex conjugate multiplication: z = z \cdot \bar{w}. z is *this.
-	void multiply(fftw_vector& p, bool conjugate=false);
-	void multiply(const fftw_complex& p, bool conjugate=false);
+	// Please note that the parameter conjugate_result refer to the _result_ not to the operation itself.
+	void mult_conj(fftw_vector& p, bool conjugate_result=false);
+	void mult_conj(const fftw_complex& p, bool conjugate_result=false);
 
 	void set_samples(const std::vector<double>& real, const std::vector<double>& imag, bool fftw_estimate);
 
