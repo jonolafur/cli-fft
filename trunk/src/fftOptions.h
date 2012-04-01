@@ -26,7 +26,7 @@ public:
 	bool orderSamples() const {return (var_map.count("ordered-x-axis")!=0 && !positiveAxisOnly() );}
 	bool positiveAxisOnly() const {return ( var_map.count("positive-only")!=0 && !isComplex() );}
 	bool normalize() const {return var_map.count("normalize")!=0;}
-
+	bool acf() const {return var_map.count("auto-correlate") !=0;}
 	bool writeMagnitudeAndPhase() const {return var_map.count("magnitude-phase") !=0;}
 	bool inverseFFT() const {return var_map.count("inverse") !=0;}
 

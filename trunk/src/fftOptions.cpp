@@ -32,6 +32,7 @@ void fftOptions::addfftOptions()
 	("magnitude-phase,M","Output format: Writes the magnitude and phase to the output, "
 			"rather than real and imaginary components.")
 	("inverse,I", "Perform an inverse fft rather than a forward FFT.")
+	("auto-correlate,A", "Perform an auto-correlation of the samples. The operation basically does IFFT(FFT*conj(FFT)).")
 	("complex,c","Perform transformations on complex data. See -y option below.")
 	("x-values,x", po::value<int>()->default_value(0),
 			"x-values: fft will infer the frequency from the first two elements. "
