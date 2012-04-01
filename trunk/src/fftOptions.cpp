@@ -32,7 +32,14 @@ void fftOptions::addfftOptions()
 	("magnitude-phase,M","Output format: Writes the magnitude and phase to the output, "
 			"rather than real and imaginary components.")
 	("inverse,I", "Perform an inverse fft rather than a forward FFT.")
-	("auto-correlate,A", "Perform an auto-correlation of the samples. The operation basically does IFFT(FFT*conj(FFT)).")
+	("auto-correlate,A", po::value<int>()->default_value(0),
+			"Perform an auto-correlation of the samples. The operation basically does IFFT(FFT*conj(FFT)).\n"
+			"To have more control over what\'s happening you can specify the following:\n"
+			"0: \tDo a simple cyclic auto correlation.\n"
+			"1: \tDo a simple linear auto correlation. This is done by zero padding the signal "
+			"by a factor of two. This will down-weigh the higher lag values (implicit Bartlett window).\n"
+			"2: \tSame as 1, except the implicit Bartlett windowing is removed, i.e. the samples are "
+			"normalized with N-|l|, where N is the number of samples and l is the lag.")
 	("complex,c","Perform transformations on complex data. See -y option below.")
 	("x-values,x", po::value<int>()->default_value(0),
 			"x-values: fft will infer the frequency from the first two elements. "

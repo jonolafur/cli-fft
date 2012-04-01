@@ -158,7 +158,7 @@ void fftw_vector::getSample(double& x, double& y, int idx, bool polar_coord)
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
-void fftw_vector::multiply(fftw_vector& p, bool conjugate)
+void fftw_vector::mult_conj(fftw_vector& p, bool conjugate_result)
 {
 	if(size() != p.size())
 		throw "Unequal sizes in fftw_vector::mult_conjugate(...)\n";
@@ -168,7 +168,7 @@ void fftw_vector::multiply(fftw_vector& p, bool conjugate)
 	// fftw_mult_conj(q,q), p[0] would get overwritten in the first line as well.
 
 	double c = 1.0;
-	if(conjugate) c = -1.0;
+	if(conjugate_result) c = -1.0;
 
 	for(size_t i=0; i< size(); ++i)
 	{
@@ -180,10 +180,10 @@ void fftw_vector::multiply(fftw_vector& p, bool conjugate)
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
-void fftw_vector::multiply(const fftw_complex& p, bool conjugate)
+void fftw_vector::mult_conj(const fftw_complex& p, bool conjugate_result)
 {
 	double c = 1.0;
-	if(conjugate) c = -1.0;
+	if(conjugate_result) c = -1.0;
 
 	for(size_t i=0; i< size(); ++i)
 	{
@@ -288,16 +288,16 @@ void fftw_vector::copy_sample(fftw_complex& z, double x) const
 void fftw_vector::write(const std::string& file_name, bool freq)
 {
 	std::ofstream out(file_name.c_str());
-	std::string comment("# Frequency    Real    Imaginary");
+	std::string comment("# Frequency    Real    Imaginary\n");
 	double Delta=m_Df;
 
 	if(!freq)  // If the vector content is to be interpreted as time domain data
 	{
-		comment = "# Time    Real    Imaginary";
+		comment = "# Time    Real    Imaginary\n";
 		Delta=m_Dt;
 	}
 
-	out << std::setprecision(12);
+	out << std::setprecision(12) << comment;
 	for(std::size_t i=0; i<size(); ++i)
 	    out <<  double(i)*Delta  << ' '
             << m_x[i][0] << ' ' << m_x[i][1] << '\n';
