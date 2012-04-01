@@ -158,7 +158,7 @@ void fftw_vector::getSample(double& x, double& y, int idx, bool polar_coord)
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
-void fftw_vector::mult_conjugate(fftw_vector& p, bool conjugate)
+void fftw_vector::multiply(fftw_vector& p, bool conjugate)
 {
 	if(size() != p.size())
 		throw "Unequal sizes in fftw_vector::mult_conjugate(...)\n";
@@ -180,7 +180,7 @@ void fftw_vector::mult_conjugate(fftw_vector& p, bool conjugate)
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
-void fftw_vector::mult_conjugate(const fftw_complex& p, bool conjugate)
+void fftw_vector::multiply(const fftw_complex& p, bool conjugate)
 {
 	double c = 1.0;
 	if(conjugate) c = -1.0;
