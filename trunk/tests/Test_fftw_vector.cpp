@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <sstream>
+#include "fileIO.h"
 #include "fftw_vector.h"
 
 
@@ -165,11 +166,9 @@ bool test_acf_cyclic()
 		v[i][1] = sin(w*t);
 	}
 
-	v.fft();
-	v.mult_conj(v);
-	v.ifft();
+	v.acf();
 
-//	v.write("dbg_cyclic.txt");
+	// v.write("dbg_cyclic.txt");
 
 	// Check result:
 	t=0.0;
@@ -189,6 +188,7 @@ bool test_acf_cyclic()
 ///////////////////////////////////////////////////////////////////////////////
 bool test_acf_zero_pad(std::size_t N, double angularFrequency)
 {
+	data_columns cols;
 	fftw_vector v;
 	double pi = 2.0*acos(0.0);
 	double tolerableError = 1.0e-7;
@@ -196,31 +196,17 @@ bool test_acf_zero_pad(std::size_t N, double angularFrequency)
 	double dt = 2.0*pi/double(N);
 	double t = 0.0;
 
-	v.re_alloc(2*N, false);
-
-	for(std::size_t i =0; i<v.size(); ++i, t += dt)
+	for(std::size_t i =0; i<N; ++i, t += dt)
 	{
-		if(i<N)
-		{
-			v[i][0] = cos(angularFrequency*t);
-			v[i][1] = sin(angularFrequency*t);
-		}
-		else
-			v[i][0] = v[i][1] = 0.0;
+		cols.m_data[1].push_back(cos(angularFrequency*t));
+		cols.m_data[2].push_back(sin(angularFrequency*t));
 	}
 
-	v.fft();
-	v.mult_conj(v);
-	v.ifft();
+	cols.zeroPadSamplesByFactorTwo();
 
-	for( std::size_t i=1; i<N; ++i) // The value at i=0 is already normalized
-	{
-		double norm = static_cast<double>(N)/static_cast<double>(N-i);
-		v[i][0] *= norm;
-		v[i][1] *= norm;
-		v[v.size()-i][0] *= norm;
-		v[v.size()-i][1] *= norm;
-	}
+	v.set_samples(cols.realAxis(), cols.imagAxis(),false);
+
+	v.acf(true);
 
 //	v.write("dbg.txt");
 
@@ -244,7 +230,6 @@ bool test_acf_zero_pad(std::size_t N, double angularFrequency)
 
 	return true;
 }
-
 ///////////////////////////////////////////////////////////////////////////////
 // Main test driver:
 int Test_fftw_vector(int , char*[])
