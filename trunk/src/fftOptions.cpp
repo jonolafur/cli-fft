@@ -32,12 +32,12 @@ void fftOptions::addfftOptions()
 	("magnitude-phase,M","Output format: Writes the magnitude and phase to the output, "
 			"rather than real and imaginary components.")
 	("inverse,I", "Perform an inverse fft rather than a forward FFT.")
-	("auto-correlate,A", "Perform an auto-correlation of the samples. The operation basically does IFFT(FFT*conj(FFT)).\n"
+	("auto-correlate,A", po::value<std::string>(), "Perform an auto-correlation of the samples. The operation basically does IFFT(FFT*conj(FFT)).\n"
 			"To have more control over what\'s happening you must specify one of the following:\n"
-			"0: \tDo a simple cyclic auto correlation.\n"
-			"1: \tDo a simple linear auto correlation. This is done by zero padding the signal "
+			"\'c\' \tor \'cyclic\': Do a simple cyclic auto correlation.\n"
+			"\'l\' \tor \'linear\': Do a simple linear auto correlation. This is done by zero padding the signal "
 			"by a factor of two. This will down-weigh the higher lag values (implicit Bartlett window).\n"
-			"2: \tSame as 1, except the implicit Bartlett windowing is removed, i.e. the samples are "
+			"\'b\' \tor \'no-bartlett\': Same as \'linear\', except the implicit Bartlett windowing is removed, i.e. the samples are "
 			"normalized with N-|l|, where N is the number of samples and l is the lag.")
 	("complex,c","Perform transformations on complex data. See -y option below.")
 	("x-values,x", po::value<int>()->default_value(0),
@@ -93,5 +93,45 @@ std::string fftOptions::outputFile()
 
 	return var_map["output-file"].as<std::string>();
 }
+///////////////////////////////////////////////////////////////////////////////
+bool fftOptions::cyclicAcf() const
+{
+	if(var_map.count("auto-correlate")==0)
+		return false;
+
+	return ( var_map["auto-correlate"].as<std::string>() == "c" ||
+             var_map["auto-correlate"].as<std::string>() == "cyclic" );
+}
+///////////////////////////////////////////////////////////////////////////////
+bool fftOptions::zeroPadSamples() const
+{
+	if(var_map.count("auto-correlate")==0)
+		return false;
+
+	return ( var_map["auto-correlate"].as<std::string>() == "l" ||
+			 var_map["auto-correlate"].as<std::string>() == "linear" ||
+			 var_map["auto-correlate"].as<std::string>() == "b" ||
+			 var_map["auto-correlate"].as<std::string>() == "no-bartlett" );
+}
+///////////////////////////////////////////////////////////////////////////////
+bool fftOptions::removeBartlett() const
+{
+	if(var_map.count("auto-correlate")==0)
+		return false;
+
+	return ( var_map["auto-correlate"].as<std::string>() == "b" ||
+	         var_map["auto-correlate"].as<std::string>() == "no-bartlett" );
+}
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -84,6 +84,9 @@ void readInput(fftOptions& opt, fftw_vector& fft_vec)
 
 	getColsFromFile(opt.inputFile(), fft_data, colIdx, opt.getDelimiterAsString() );
 
+	if(opt.zeroPadSamples())
+		fft_data.zeroPadSamplesByFactorTwo();
+
 	if(opt.isComplex())
 		fft_vec.set_samples(fft_data.realAxis(), fft_data.imagAxis(), false);
 	else
@@ -101,6 +104,12 @@ void readInput(fftOptions& opt, fftw_vector& fft_vec)
 ///////////////////////////////////////////////////////////////////////////////
 void processInput(fftOptions& opt, fftw_vector& fft_vec)
 {
+	if(opt.acf())
+	{
+		fft_vec.acf(opt.removeBartlett());
+		return;
+	}
+
 	if(opt.inverseFFT())
 		fft_vec.ifft();
 	else
@@ -127,7 +136,7 @@ void writeOutput(fftOptions& opt, fftw_vector& fft_vec)
 	(*out_stream).precision(12);
 
 	if(opt.orderSamples())
-		writeOrdered(fft_vec,out_stream, opt);
+		writeOrdered(fft_vec, out_stream, opt);
 
 	writeStandard(fft_vec, out_stream, opt );
 
@@ -172,7 +181,7 @@ void writeSample(int idx, int offset, fftw_vector& fft, std::ostream* out_stream
 
 	// If an IFFT was performed, the assumption is that the horizontal axis of
 	// the _output_ (i.e. _after_ the transformation) is a time coordinate
-	if(opt.inverseFFT())
+	if(opt.inverseFFT() || opt.acf())
 		a = fft.time(idx-offset);
 	else // Otherwise it is assumed to be a frequency coordinate.
 		a = fft.frequency(idx-offset);
