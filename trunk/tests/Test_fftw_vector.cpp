@@ -36,6 +36,27 @@ bool compare_fftw_vec(fftw_vector& result, fftw_vector& truth, double tol )
 	}
 	return true;
 }
+bool checkSymmetryOfACF(fftw_vector& v,double tolerableError )
+{
+	if(v.size()%2!=0)
+	{
+		std::cout << "ACF has odd size." << std::endl;
+		return false;
+	}
+
+	for(std::size_t i = 1; i<v.size()/2; i++)
+	{
+		if(std::abs(v[v.size()-i][0]-v[i][0]) > tolerableError || // even
+           std::abs(v[v.size()-i][1]+v[i][1]) > tolerableError )  // odd
+        {
+			std::cout << "ACF not symmetric at index: " << i
+					<< " Deviation was: (" << v[v.size()-i][0]-v[i][0] << " ,"
+					<< v[v.size()-i][1]+v[i][1] << ")\n";
+			return false;
+        }
+    }
+	return true;
+}
 ///////////////////////////////////////////////////////////////////////////////
 bool test_fftw_inner_unequal_size()
 {
@@ -124,17 +145,19 @@ bool test_fftw_inner()
 
 	return true;
 }
-bool test_acf()
+///////////////////////////////////////////////////////////////////////////////
+bool test_acf_cyclic()
 {
 	fftw_vector v;
 	double pi = 2.0*acos(0.0);
-
-	v.re_alloc(100, false);
-
-	// Initializing:
-	double dt = 2.0*pi/double(v.size());
+	double epsilon = 1.0e-7;
+	int N = 512;
+	double A = N*N;
+	double dt = 2.0*pi/double(N);
 	double t = 0.0;
-	double w = 2.2;
+	double w = 3.0;
+
+	v.re_alloc(N, false);
 
 	for(std::size_t i =0; i<v.size(); ++i, t += dt)
 	{
@@ -146,11 +169,82 @@ bool test_acf()
 	v.mult_conj(v);
 	v.ifft();
 
-	v.write("tmp.txt", false);
+//	v.write("dbg_cyclic.txt");
 
-	return false;
-
+	// Check result:
+	t=0.0;
+	for( std::size_t i=0; i<v.size(); ++i, t += dt)
+	{
+		if(std::abs(A*cos(w*t)-v[i][0]) >epsilon ||
+		   std::abs(A*sin(w*t)-v[i][1]) >epsilon )
+		{
+			std::cout << "Failed acf_cyclic at index: " << i
+					<< " Deviation was: ("
+					<< A*cos(w*t)-v[i][0] << ", "<< A*sin(w*t)-v[i][1] << ")\n";
+			return false;
+		}
+	}
+	return true;
 }
+///////////////////////////////////////////////////////////////////////////////
+bool test_acf_zero_pad(std::size_t N, double angularFrequency)
+{
+	fftw_vector v;
+	double pi = 2.0*acos(0.0);
+	double tolerableError = 1.0e-7;
+	double A = 2*N*N; // The expected amplitude: In N samples there is signal, but there are 2N samples
+	double dt = 2.0*pi/double(N);
+	double t = 0.0;
+
+	v.re_alloc(2*N, false);
+
+	for(std::size_t i =0; i<v.size(); ++i, t += dt)
+	{
+		if(i<N)
+		{
+			v[i][0] = cos(angularFrequency*t);
+			v[i][1] = sin(angularFrequency*t);
+		}
+		else
+			v[i][0] = v[i][1] = 0.0;
+	}
+
+	v.fft();
+	v.mult_conj(v);
+	v.ifft();
+
+	for( std::size_t i=1; i<N; ++i) // The value at i=0 is already normalized
+	{
+		double norm = static_cast<double>(N)/static_cast<double>(N-i);
+		v[i][0] *= norm;
+		v[i][1] *= norm;
+		v[v.size()-i][0] *= norm;
+		v[v.size()-i][1] *= norm;
+	}
+
+//	v.write("dbg.txt");
+
+	// Check result:
+	t=0.0;
+	for( std::size_t i=0; i<N; ++i, t += dt)
+	{
+		if(std::abs(A*cos(angularFrequency*t)-v[i][0]) >tolerableError ||
+		   std::abs(A*sin(angularFrequency*t)-v[i][1]) >tolerableError )
+		{
+			std::cout << "Failed acf_zero_pad at index: " << i
+					<< " Deviation was: ("
+					<< A*cos(angularFrequency*t)-v[i][0] << ", "
+					<< A*sin(angularFrequency*t)-v[i][1] << ")\n";
+			return false;
+		}
+	}
+
+	if(!checkSymmetryOfACF(v,tolerableError))
+		return false;
+
+	return true;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // Main test driver:
 int Test_fftw_vector(int , char*[])
@@ -163,7 +257,13 @@ int Test_fftw_vector(int , char*[])
 	if(!test_fftw_inner())
 		return ret_fail;
 
-	if(!test_acf())
+	if(!test_acf_cyclic())
+		return ret_fail;
+
+	if(!test_acf_zero_pad(512, 3.789))
+		return ret_fail;
+
+	if(!test_acf_zero_pad(511, 3.5))
 		return ret_fail;
 
 	return ret_ok;

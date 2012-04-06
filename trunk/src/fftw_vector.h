@@ -58,6 +58,7 @@ public:
 	double norm() const;
 	void fft();
 	void ifft();
+	void acf(bool removeBartlettWindow=false);
 	void fft_filter(double bw, double f_s);
 	void setSampleTime(double dt);
 	void setSampleFrequency(double df);
@@ -91,6 +92,7 @@ public:
 protected:
 	void free_samples();
 	void copy_sample(fftw_complex& z, double x) const;
+	void removeImplicitBartlettWindow();
 };
 
 ///////////////////////////////////////////////////////////////////////////////

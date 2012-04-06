@@ -136,6 +136,31 @@ double fftw_vector::norm() const
 	return sqrt(norm);
 }
 ///////////////////////////////////////////////////////////////////////////////
+void fftw_vector::acf(bool removeBartlettWindow)
+{
+	// It is assumed that the vector has already been zero-padded.
+	fft();
+	mult_conj(*this);
+	ifft();
+
+	if(removeBartlettWindow)
+		removeImplicitBartlettWindow();
+}
+///////////////////////////////////////////////////////////////////////////////
+void fftw_vector::removeImplicitBartlettWindow()
+{
+	double N=static_cast<double>(size()/2);
+	double d_i = 0.0;
+	for( std::size_t i=1; i<size()/2; ++i, d_i +=1.0) // The value at i=0 is already normalized
+	{
+		double norm = N/(N-d_i);
+		m_x[i][0] *= norm;
+		m_x[i][1] *= norm;
+		m_x[size()-i][0] *= norm;
+		m_x[size()-i][1] *= norm;
+	}
+}
+///////////////////////////////////////////////////////////////////////////////
 polar fftw_vector::getPolar(int idx)
 {
 	polar p(sqrt(m_x[idx][0]*m_x[idx][0]+ m_x[idx][1]*m_x[idx][1]),
@@ -256,15 +281,6 @@ void fftw_vector::fft_filter(double bw, double f_s)
 	std::clog << "First sample index deleted: " << N << '\n'
 	          << "Last sample index deleted: " << m_size-N-1 << std::endl;
 }
-///////////////////////////////////////////////////////////////////////////////
-/**
-* Applying a frequency response.
-* The user can supply a frequency response in an ASCII file. The ASCII data is
-* loaded into interpolation objects that are used to provide an interpolated
-* value of the frequency response in magnitude and phase. Here this frequency
-* Response is applied. The function assumes that the samples to transform are
-* located in m_pRotSamples.
-*/
 ///////////////////////////////////////////////////////////////////////////////
 void fftw_vector::free_samples()
 {

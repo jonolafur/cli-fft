@@ -37,21 +37,6 @@ void generateFile(std::string fileName, int numLines)
 	std::cout << "Finished generating data file." << std::endl;
 }
 ///////////////////////////////////////////////////////////////////////////////
-bool checkEqualColumnLength(const data_columns& columns)
-{
-	std::size_t N = columns[0].size();
-
-	for(std::size_t i=1; i<columns.size(); i++)
-	{
-		if(columns[i].size() != N)
-		{
-			std::cout << "Unequal entries in column: " << i << " and " << i-1;
-			return false;
-		}
-	}
-	return true;
-}
-///////////////////////////////////////////////////////////////////////////////
 int Test_read_file(int, char*[] )
 {
 	int ret_ok=0, ret_fail=1;
@@ -77,12 +62,16 @@ int Test_read_file(int, char*[] )
 		return ret_fail;
 	}
 
-	checkEqualColumnLength(columns);
+	if(!columns.checkEqualNonzeroColumnLength())
+	{
+		std::cout << "Unequal columns detected.\n";
+		return ret_fail;
+	}
 
-	if(columns[0].size() != numberOfLines)
+	if(columns.max_size() != numberOfLines)
 	{
 		std::cout << "Incorrect number of entries read. Should have been: "
-				<< numberOfLines << " but " << columns[0].size() << " were retrieved.\n";
+				<< numberOfLines << " but " << columns.max_size() << " were retrieved.\n";
 		return ret_fail;
 	}
 

@@ -23,13 +23,28 @@
 namespace ba = boost::algorithm;
 
 ///////////////////////////////////////////////////////////////////////////////
-typedef std::vector<std::vector<double> > data_columns;
+class data_columns
+{
+public:
+	std::vector<std::vector<double> > m_data;
+	data_columns(): m_data(3){}
+	virtual ~data_columns(){}
+
+	std::vector<double>& x_axis(){return m_data[0];}
+	std::vector<double>& realAxis(){return m_data[1];}
+	std::vector<double>& imagAxis(){return m_data[2];}
+
+	std::size_t size(){return m_data.size();}
+	std::size_t max_size();
+	bool checkEqualNonzeroColumnLength();
+};
 
 bool isCommentedOut(std::string line, std::string commentIdentifier="#");
 
 void getColsFromFile(std::string fileName,
 		data_columns& columns, std::vector<int>& columnIdx,
 		std::string delimiter);
+
 void tokenize(std::vector<std::string>& result, const std::string& inputLine,
               const std::string& delimiter);
 
