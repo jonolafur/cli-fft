@@ -85,23 +85,13 @@ void readInput(fftOptions& opt, fftw_vector& fft_vec)
 	getColsFromFile(opt.inputFile(), fft_data, colIdx, opt.getDelimiterAsString() );
 
 	if(opt.isComplex())
-	{
-		if( opt.xAxisSpecified())
-			fft_vec.set_samples(fft_data[1], fft_data[2], false);
-		else
-			fft_vec.set_samples(fft_data[0], fft_data[1], false);
-	}
+		fft_vec.set_samples(fft_data.realAxis(), fft_data.imagAxis(), false);
 	else
-	{
-		if(opt.xAxisSpecified())
-			fft_vec.set_samples(fft_data[1], false);
-		else
-			fft_vec.set_samples(fft_data[0], false);
-	}
+		fft_vec.set_samples(fft_data.realAxis(), false);
 
 	if(opt.xAxisSpecified())
 	{
-		double dx =  checkSampleDelta(fft_data[0]);
+		double dx =  checkSampleDelta(fft_data.x_axis());
 		if(opt.inverseFFT())
 			fft_vec.setSampleFrequency(dx);
 		else

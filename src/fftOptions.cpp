@@ -32,9 +32,8 @@ void fftOptions::addfftOptions()
 	("magnitude-phase,M","Output format: Writes the magnitude and phase to the output, "
 			"rather than real and imaginary components.")
 	("inverse,I", "Perform an inverse fft rather than a forward FFT.")
-	("auto-correlate,A", po::value<int>()->default_value(0),
-			"Perform an auto-correlation of the samples. The operation basically does IFFT(FFT*conj(FFT)).\n"
-			"To have more control over what\'s happening you can specify the following:\n"
+	("auto-correlate,A", "Perform an auto-correlation of the samples. The operation basically does IFFT(FFT*conj(FFT)).\n"
+			"To have more control over what\'s happening you must specify one of the following:\n"
 			"0: \tDo a simple cyclic auto correlation.\n"
 			"1: \tDo a simple linear auto correlation. This is done by zero padding the signal "
 			"by a factor of two. This will down-weigh the higher lag values (implicit Bartlett window).\n"
@@ -58,17 +57,17 @@ void fftOptions::addfftOptions()
 ///////////////////////////////////////////////////////////////////////////////
 std::vector<int> fftOptions::getZeroBasedColumnIndexes()
 {
-	std::vector<int> colIdx;
+	std::vector<int> colIdx(3,-1);
 
 	if(x_value_Idx()>0)
-		colIdx.push_back(x_value_Idx()-1);
+		colIdx[0] = x_value_Idx()-1;
 
 	if(y_value_Idx()>0)
 	{
-		colIdx.push_back(y_value_Idx()-1);
+		colIdx[1]= y_value_Idx()-1;
 
 		if(isComplex())
-			colIdx.push_back(y_value_Idx());
+			colIdx[2] = y_value_Idx();
 	}
 
 	return colIdx;

@@ -8,6 +8,33 @@
 #include "fileIO.h"
 
 ///////////////////////////////////////////////////////////////////////////////
+std::size_t data_columns::max_size()
+{
+	std::size_t N = m_data[0].size();
+
+	for(std::size_t i=1; i<size(); i++)
+	{
+		if(N<m_data[i].size())
+			N=m_data[i].size();
+	}
+	return N;
+}
+///////////////////////////////////////////////////////////////////////////////
+bool data_columns::checkEqualNonzeroColumnLength()
+{
+	std::size_t N = max_size();
+
+	for(std::size_t i=0; i<size(); i++)
+	{
+		if(m_data[i].size() != N && m_data[i].size()!=0)
+		{
+			std::clog << "Unequal, non-zero column sizes." << std::endl;
+			return false;
+		}
+	}
+	return true;
+}
+///////////////////////////////////////////////////////////////////////////////
 bool isCommentedOut(std::string line, std::string commentIdentifier)
 {
 	if(line.empty())
@@ -28,6 +55,7 @@ void getColsFromFile(std::string fileName, data_columns& columns,
 	std::ifstream in_file;
 	int line_count =0;
 
+	// Check and re-direct the input source:
 	if(fileName.empty())
 		in_stream = &std::cin;
 	else
@@ -38,8 +66,6 @@ void getColsFromFile(std::string fileName, data_columns& columns,
 		in_stream = &in_file;
 	}
 
-	columns.resize(columnIdx.size());
-
 	std::size_t largestColumnIndex = *(std::max_element(columnIdx.begin(), columnIdx.end()));
 
 	while(getline(*in_stream, rawLineFromFile))
@@ -48,14 +74,17 @@ void getColsFromFile(std::string fileName, data_columns& columns,
 		if( isCommentedOut(rawLineFromFile) ) continue;
 
 		tokenize(tokenizedLine, rawLineFromFile, delimiter);
+
+		// Only parse lines that have at least as many fields as the largest index:
 		if(tokenizedLine.size()<largestColumnIndex) continue;
 
 		for(std::size_t i=0; i<columnIdx.size(); i++)
 		{
+			if(columnIdx[i]<0) continue;
 			try
 			{
 				double fieldValue = boost::lexical_cast<double>( tokenizedLine[columnIdx[i]]);
-				columns[i].push_back( fieldValue );
+				columns.m_data[i].push_back( fieldValue );
 			}
 			catch(boost::bad_lexical_cast& e)
 			{
