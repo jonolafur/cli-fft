@@ -36,7 +36,8 @@ public:
 
 	std::size_t size(){return m_data.size();}
 	std::size_t max_size();
-	bool checkEqualNonzeroColumnLength();
+	bool checkEqualNonZeroColumnLength();
+	void zeroPadSamplesByFactorTwo();
 };
 
 bool isCommentedOut(std::string line, std::string commentIdentifier="#");

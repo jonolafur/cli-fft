@@ -150,7 +150,7 @@ void fftw_vector::acf(bool removeBartlettWindow)
 void fftw_vector::removeImplicitBartlettWindow()
 {
 	double N=static_cast<double>(size()/2);
-	double d_i = 0.0;
+	double d_i = 1.0;
 	for( std::size_t i=1; i<size()/2; ++i, d_i +=1.0) // The value at i=0 is already normalized
 	{
 		double norm = N/(N-d_i);

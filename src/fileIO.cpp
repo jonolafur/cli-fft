@@ -20,7 +20,13 @@ std::size_t data_columns::max_size()
 	return N;
 }
 ///////////////////////////////////////////////////////////////////////////////
-bool data_columns::checkEqualNonzeroColumnLength()
+void data_columns::zeroPadSamplesByFactorTwo()
+{
+	m_data[1].resize(m_data[1].size()*2, 0.0);
+	m_data[2].resize(m_data[2].size()*2, 0.0);
+}
+///////////////////////////////////////////////////////////////////////////////
+bool data_columns::checkEqualNonZeroColumnLength()
 {
 	std::size_t N = max_size();
 

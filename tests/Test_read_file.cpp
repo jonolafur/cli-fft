@@ -51,7 +51,7 @@ bool readFile( std::string fileName, std::vector<int> columnIdx, std::size_t num
 		return false;
 	}
 
-	if(!columns.checkEqualNonzeroColumnLength())
+	if(!columns.checkEqualNonZeroColumnLength())
 	{
 		std::cout << "Unequal columns detected.\n";
 		return false;
@@ -93,7 +93,7 @@ bool checkColumnLength(std::string fileName, std::size_t numberOfLines )
 	// Change the size of one of the non-zero length cols:
 	columns.m_data[0].resize(numberOfLines*2);
 
-	if(!columns.checkEqualNonzeroColumnLength())
+	if(!columns.checkEqualNonZeroColumnLength())
 	{
 		std::cout << "Unequal columns correctly detected.\n";
 		return true;
