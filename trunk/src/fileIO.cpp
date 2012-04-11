@@ -89,8 +89,9 @@ void getColsFromFile(std::string fileName, data_columns& columns,
 			if(columnIdx[i]<0) continue;
 			try
 			{
-				double fieldValue = boost::lexical_cast<double>( tokenizedLine[columnIdx[i]]);
-				columns.m_data[i].push_back( fieldValue );
+				ba::trim(tokenizedLine[columnIdx[i]]);
+
+				columns.m_data[i].push_back( boost::lexical_cast<double>( tokenizedLine[columnIdx[i]] ) );
 			}
 			catch(boost::bad_lexical_cast& e)
 			{
