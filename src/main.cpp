@@ -88,9 +88,9 @@ void readInput(fftOptions& opt, fftw_vector& fft_vec)
 		fft_data.zeroPadSamplesByFactorTwo();
 
 	if(opt.isComplex())
-		fft_vec.set_samples(fft_data.realAxis(), fft_data.imagAxis(), false);
+		fft_vec.set_samples(fft_data.realAxis(), fft_data.imagAxis(), opt.estimate_fftw());
 	else
-		fft_vec.set_samples(fft_data.realAxis(), false);
+		fft_vec.set_samples(fft_data.realAxis(), opt.estimate_fftw());
 
 	if(opt.xAxisSpecified())
 	{

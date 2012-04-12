@@ -17,7 +17,7 @@ print(fft_command)
 print(test_file_in)
 print(test_file_out)
 
-option_string = fft_command + " -c -x 1 -y 2 -N < " +test_file_in +" > "+ test_file_out
+option_string = fft_command + " -e -c -x 1 -y 2 -N < " +test_file_in +" > "+ test_file_out
 
 print(option_string)
 

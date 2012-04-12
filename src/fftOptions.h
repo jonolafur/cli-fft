@@ -27,6 +27,7 @@ public:
 	bool positiveAxisOnly() const {return ( var_map.count("positive-only")!=0 && !isComplex() );}
 	bool normalize() const {return var_map.count("normalize")!=0;}
 	bool acf() const {return var_map.count("auto-correlate") !=0;}
+	bool estimate_fftw() const {return var_map.count("estimate-fftw") !=0;}
 	bool cyclicAcf() const;
 	bool zeroPadSamples() const;
 	bool removeBartlett() const;

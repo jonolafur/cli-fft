@@ -73,7 +73,7 @@ set_tests_properties(Test_fft_version
 add_test( Test_fft_std_in_out ${PYTHON_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/Test_std_in_out.py "${CMAKE_BINARY_DIR}" )
 
 
-add_test( Test_fft_inverse ${CMAKE_BINARY_DIR}/fft -I -x 1 -y 2 -c -N
+add_test( Test_fft_inverse ${CMAKE_BINARY_DIR}/fft -I -x 1 -y 2 -c -N -e 
                          -i ${CMAKE_BINARY_DIR}/tests/Test_fft_std_in_out.txt 
                          -o ${CMAKE_BINARY_DIR}/tests/Test_fft_inverse.txt )
 
@@ -85,22 +85,22 @@ add_test(Test_fft_inverse_Compare ${CMAKE_BINARY_DIR}/ascii_compare
                 -C 2 -d 1e-6 -D 1e-6 )
 
 ## ACF cyclic, real sample
-add_test( Test_ACF_cyc_real ${CMAKE_BINARY_DIR}/fft -A c -x 1 -y 2
+add_test( Test_ACF_cyc_real ${CMAKE_BINARY_DIR}/fft -A c -x 1 -y 2 -e
                          -i ${CMAKE_BINARY_DIR}/tests/Test_fft_inverse.txt 
                          -o ${CMAKE_BINARY_DIR}/tests/Test_ACF_cyc_real.txt )
 
 ## ACF cyclic, complex sample with time axis
-add_test( Test_ACF_cyc_complex ${CMAKE_BINARY_DIR}/fft -A c -x 1 -y 2 -c
+add_test( Test_ACF_cyc_complex ${CMAKE_BINARY_DIR}/fft -A c -x 1 -y 2 -c -e
                          -i ${CMAKE_BINARY_DIR}/tests/Test_fft_inverse.txt 
                          -o ${CMAKE_BINARY_DIR}/tests/Test_ACF_cyc_complex.txt )
 
 ## ACF linear, real samples
-add_test( Test_ACF_linear_real ${CMAKE_BINARY_DIR}/fft -A linear -x 1 -y 2
+add_test( Test_ACF_linear_real ${CMAKE_BINARY_DIR}/fft -A linear -x 1 -y 2 -e
                          -i ${CMAKE_BINARY_DIR}/tests/Test_fft_inverse.txt 
                          -o ${CMAKE_BINARY_DIR}/tests/Test_ACF_linear_real.txt )
 
 ## ACF linear, complex samples, no Bartlett, with time axis
-add_test( Test_ACF_linear_complex ${CMAKE_BINARY_DIR}/fft -A b -x 1 -y 2 -c
+add_test( Test_ACF_linear_complex ${CMAKE_BINARY_DIR}/fft -A b -x 1 -y 2 -c -e
                          -i ${CMAKE_BINARY_DIR}/tests/Test_fft_inverse.txt 
                          -o ${CMAKE_BINARY_DIR}/tests/Test_ACF_linear_complex.txt )
 
