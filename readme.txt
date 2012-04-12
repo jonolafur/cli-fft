@@ -1,7 +1,7 @@
-2011-12-05:
+2012-04-12:
 
 1. Overview
-This is a small utility for generating FFT of ASCII files or standard in and output to file or std out. The build is static, so no complicated dependencies must be fulfilled and thus it should be possible to use the binary with any distribution that runs on x86 or x86_64.
+This is a small utility for generating FFT of ASCII files or standard in. The output is either to file or std out. The build is static, so no complicated dependencies must be fulfilled and thus it should be possible to use the binary with any distribution that runs on x86 or x86_64.
 
 2. Installing
 To install, just copy the binary someplace where the system finds it (e.g. in your path.)
@@ -71,7 +71,7 @@ That's it. The binary should now be located in the root of your build tree. You 
 Boost missing: The standard installation of boost is probably not enough. If cmake
 complains that it cannot find it, you probably need to install some more boost. Look for libboost-program-options in your package manager.
 
-FFTW too old: If the compiler complains that the functions fftw_import_wisdom_from_filename or fftw_export_wisdom_to_filename cannot be found, you probably don't have fftw 3.3 installed. PLease download it at fftw.org and compile and install it (it is very easy!). Set it up so that cmake will find it under /usr/local.
+FFTW too old: If the compiler complains that the functions fftw_import_wisdom_from_filename or fftw_export_wisdom_to_filename cannot be found, you probably don't have fftw 3.3 installed. Please download it at fftw.org and compile and install it (it is very easy!). Set it up so that cmake will find it under /usr/local.
 
 
 
