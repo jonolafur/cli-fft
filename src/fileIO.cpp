@@ -60,6 +60,7 @@ void getColsFromFile(std::string fileName, data_columns& columns,
 	std::istream* in_stream;
 	std::ifstream in_file;
 	int line_count =0;
+	int numberOfReportedErrors = 0;
 
 	// Check and re-direct the input source:
 	if(fileName.empty())
@@ -95,8 +96,17 @@ void getColsFromFile(std::string fileName, data_columns& columns,
 			}
 			catch(boost::bad_lexical_cast& e)
 			{
-				std::clog << "Failed to interpret field nr.: " << columnIdx[i]
+				numberOfReportedErrors++;
+				if(numberOfReportedErrors < maxNumberOfFailuresToLog)
+				{
+					std::clog << "Failed to interpret field nr.: " << columnIdx[i]
 				          << " at line nr.: " << line_count << " in file: " << fileName << '\n';
+				}
+				if(numberOfReportedErrors == maxNumberOfFailuresToLog)
+				{
+					std::clog << "Log file flooding prevention: Already reported " << numberOfReportedErrors <<
+					" bad fields. Will proceed quietly from now on. Note that more errors may occur during further file read...\n";
+				}
 			}
 		}
 	}
@@ -110,6 +120,7 @@ void tokenize(std::vector<std::string>& result, const std::string& inputLine,
 	else
 		ba::split(result, inputLine, ba::is_any_of(delimiter), ba::token_compress_on);
 }
+///////////////////////////////////////////////////////////////////////////////
 
 
 
