@@ -23,6 +23,8 @@
 namespace ba = boost::algorithm;
 
 ///////////////////////////////////////////////////////////////////////////////
+static const int maxNumberOfFailuresToLog = 100;
+
 class data_columns
 {
 public:
