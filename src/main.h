@@ -47,6 +47,7 @@ void writeOrdered(fftw_vector& fft, std::ostream* out_stream,
 void writeStandard(fftw_vector& fft, std::ostream* out_stream,
                    const fftOptions& opt);
 std::streambuf* redirect_clog(std::string log_file_base_name, std::ofstream& log_file);
+std::string makeLogPath(std::string log_file_base_name);
 void writeSample(int idx, int offset, fftw_vector& fft, std::ostream* out_stream, const fftOptions& opt);
 void logHistory( int a, char* av[] );
 

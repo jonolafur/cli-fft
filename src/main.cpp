@@ -20,12 +20,14 @@ int main(int argc, char* argv[])
 
 	int ret_val = ret_ok;
 	std::string programName("fft");
+	std::string log_file_name(".fft.log");
 	std::ofstream log_file;
 	std::streambuf* backup=0L;
 	
 	try
 	{
-		backup = redirect_clog(std::string(".fft.log"), log_file );
+		log_file_name = makeLogPath(log_file_name);
+		backup = redirect_clog(log_file_name, log_file );
 
 		logHistory(argc, argv);
 
@@ -72,6 +74,9 @@ int main(int argc, char* argv[])
 	}
 
 	std::clog.rdbuf(backup);
+
+	if(ret_error)
+		std::cout << "# Errors were encountered, please see log file: " << log_file_name << std::endl;
 
 	return ret_val;
 }
@@ -190,10 +195,26 @@ void writeSample(int idx, int offset, fftw_vector& fft, std::ostream* out_stream
 	(*out_stream) << a << ' ' << x << ' ' << y << '\n';
 }
 ///////////////////////////////////////////////////////////////////////////////
-std::streambuf* redirect_clog(std::string log_file_base_name,
+std::streambuf* redirect_clog(std::string log_path,
                               std::ofstream& log_file)
 {
 	std::streambuf* clog_buffer = std::clog.rdbuf();
+
+	log_file.open(log_path.c_str());
+
+	if(log_file)
+		std::clog.rdbuf( log_file.rdbuf() );
+	else
+	{
+		std::string s = "Failed to open file: " + log_path + "for writing.\n";
+		throw s;
+	}
+
+	return clog_buffer;
+}
+///////////////////////////////////////////////////////////////////////////////
+std::string makeLogPath(std::string log_file_base_name)
+{
 	bool readHomePathOk=false;
 	std::string log_path;
 
@@ -202,26 +223,15 @@ std::streambuf* redirect_clog(std::string log_file_base_name,
 	if(homePath)
 	{
 		readHomePathOk=true;
-		log_path = std::string( homePath );
-		log_path += "/" + log_file_base_name;
+		log_path = std::string( homePath ) + "/" + log_file_base_name;
 	}
 	else
 		log_path = log_file_base_name;
 
-	log_file.open(log_path.c_str());
+	if(!readHomePathOk)
+		std::cout << "# Unable to retrieve home path. Writing log to current directory.\n";
 
-	if(log_file)
-		std::clog.rdbuf( log_file.rdbuf() );
-	else
-	{
-		std::string s = "Failed to open file: " + log_file_base_name + "for writing.\n";
-		throw s;
-	}
-
-	if(!readHomePathOk)	// Delaying writing to log until it has been re-directed to the file.
-		std::clog << "Unable to retrieve home path. Writing log to current directory.\n";
-
-	return clog_buffer;
+	return log_path;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void logHistory( int a, char* av[] )
