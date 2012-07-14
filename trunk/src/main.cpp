@@ -150,7 +150,8 @@ void writeOutput(fftOptions& opt, fftw_vector& fft_vec)
 double checkSampleDelta(const std::vector<double>& t)
 {
 	std::size_t N = t.size();
-	if(N<2) throw "Error: less than two samples in checkSampleTime.\n";
+	if(N<2) throw "An x-axis was specified on the command line (option -x), but in "
+			"that column less than two samples were found.";
 
 	double dt = ( t.back()-t.front() )/static_cast<double>(N-1);
 	// TODO: generate some statistics on the time axis
@@ -191,7 +192,8 @@ void writeSample(int idx, int offset, fftw_vector& fft, std::ostream* out_stream
 	else // Otherwise it is assumed to be a frequency coordinate.
 		a = fft.frequency(idx-offset);
 
-	fft.getSample(x,y,idx,opt.writeMagnitudeAndPhase() );
+	fft.getSample(x, y, idx, opt.writeMagnitudeAndPhase() );
+
 	(*out_stream) << a << ' ' << x << ' ' << y << '\n';
 }
 ///////////////////////////////////////////////////////////////////////////////

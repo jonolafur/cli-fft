@@ -223,10 +223,10 @@ void fftw_vector::mult_conj(const fftw_complex& p, bool conjugate_result)
 void fftw_vector::setSampleTime(double dt)
 {
 	if(dt < std::numeric_limits<double>::epsilon() )
-		throw "fftw_vector::setSampleTime: too small sample time!\n";
+		throw "fftw_vector::setSampleTime: too small sample time!";
 
 	if(size() == 0 )
-		throw "fftw_vector::setSampleTime: Sample vector is empty. Cannot set sample size.\n";
+		throw "fftw_vector::setSampleTime: Sample vector is empty. Cannot set sample size.";
 
 	m_Dt = dt;
 	m_Df = 1.0/( m_Dt*static_cast<double>(size()) );
@@ -235,10 +235,10 @@ void fftw_vector::setSampleTime(double dt)
 void fftw_vector::setSampleFrequency(double df)
 {
 	if(df < std::numeric_limits<double>::epsilon() )
-		throw "fftw_vector::setSampleFrequency: too small sample frequency!\n";
+		throw "fftw_vector::setSampleFrequency: too small sample frequency!";
 
 	if(size() == 0 )
-		throw "fftw_vector::setSampleFrequency: Sample vector is empty. Cannot set sample frequency.\n";
+		throw "fftw_vector::setSampleFrequency: Sample vector is empty. Cannot set sample frequency.";
 
 	m_Df = df;
 	m_Dt = 1.0/( m_Df*static_cast<double>(size()) );
