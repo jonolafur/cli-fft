@@ -10,6 +10,10 @@
 #include "fileIO.h"
 
 ///////////////////////////////////////////////////////////////////////////////
+// Generates a test file with numLines lines. Five columns are generated:
+// 1: time coordinate
+// 2 and 3: Two sine/cosine waves with different frequency and different amplitude.
+// 4 and 5: sine and cosine with time-varying frequency.
 void generateFile(std::string fileName, int numLines)
 {
 	std::cout << "Generating data file: " << fileName
@@ -22,7 +26,7 @@ void generateFile(std::string fileName, int numLines)
 
 	double t=0.0;
 	double w = 2.0*3.141567;
-	for(int i=0; i<numLines; i++, t+=0.011)
+	for(int i=0; i<numLines; i++, t+=0.0011)
 	{
 		out << t << ' '
 	          << 0.1 + cos(w*t) +2.3*sin(2*w*t) << ' '
@@ -106,7 +110,7 @@ bool checkColumnLength(std::string fileName, std::size_t numberOfLines )
 int Test_read_file(int, char*[] )
 {
 	int ret_ok=0, ret_fail=1;
-	std::size_t numberOfLines = 2000;
+	std::size_t numberOfLines = 20000;
 
 	std::vector<int> columnIdx;
 	std::string delimiter = " ";

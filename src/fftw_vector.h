@@ -72,6 +72,8 @@ public:
 	polar getPolar(int idx);
 	double abs(int idx) const {return sqrt(m_x[idx][0]*m_x[idx][0]+ m_x[idx][1]*m_x[idx][1]);}
 	double arg(int idx) const {return atan2(m_x[idx][1],m_x[idx][0]);}
+	double real(int idx) const {return m_x[idx][0];}
+	double imag(int idx) const {return m_x[idx][1];}
 	void getSample(double& x, double& y, int idx, bool polar_coord);
 
 	fftw_complex& operator[](std::size_t i){return m_x[i];}

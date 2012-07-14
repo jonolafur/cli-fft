@@ -110,6 +110,8 @@ bool fftOptions::zeroPadSamples() const
 	if(var_map.count("auto-correlate")==0)
 		return false;
 
+	// The linear auto correlation requires zero padding. There are two types of
+	// linear ACF: withe nad without removal of the implicit Bartlett window.
 	return ( var_map["auto-correlate"].as<std::string>() == "l" ||
 			 var_map["auto-correlate"].as<std::string>() == "linear" ||
 			 var_map["auto-correlate"].as<std::string>() == "b" ||
