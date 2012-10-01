@@ -2,6 +2,7 @@
 #include <sstream>
 #include "fileIO.h"
 #include "fftw_vector.h"
+#include <boost/random.hpp>
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -230,6 +231,53 @@ bool test_acf_zero_pad(std::size_t N, double angularFrequency)
 
 	return true;
 }
+
+bool test_fftw_vector_normalize()
+{
+	boost::mt19937 rng( 1234 );  // on gcc the cast will use the LSBs
+	boost::normal_distribution<> gauss_dist;   // Gauß-ian distribution with mean 0 and variance 1
+	boost::variate_generator<boost::mt19937&, boost::normal_distribution<> >
+           gauss(rng, gauss_dist);             // glues randomness with mapping
+
+	int N = 1000;
+	fftw_vector v;
+	v.re_alloc(N,true);
+
+	// Fill up with some garbage:
+	fftw_complex z;
+
+	for(int i=0; i<N; i++)
+	{
+		z[0] = gauss();
+		z[1] = gauss();
+
+		v.push_back(z);
+	}
+
+	double norm_before = v.norm();
+
+	v.fft();
+	v.ifft();
+
+	v.normalizeSquare();
+	double norm_after = v.norm();
+
+	std::cout << "test_fftw_vector_normalize: Norm of random garbage before: " << norm_before
+			<< " norm after: " << norm_after << '\n';
+
+	if(std::abs(norm_after-norm_before) >1e-6)
+		return false;
+
+	v.acf();
+	v.normalizeToValue(norm_before*norm_before);
+
+	std::cout << "test_fftw_vector_normalize: ACF(0): real: "
+			<< v.real(0)<<  " imaginary: " << v.imag(0) << '\n';
+
+	return false;
+
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // Main test driver:
 int Test_fftw_vector(int , char*[])
@@ -249,6 +297,9 @@ int Test_fftw_vector(int , char*[])
 		return ret_fail;
 
 	if(!test_acf_zero_pad(511, 3.5))
+		return ret_fail;
+
+	if(!test_fftw_vector_normalize())
 		return ret_fail;
 
 	return ret_ok;

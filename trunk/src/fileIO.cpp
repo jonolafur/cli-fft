@@ -41,6 +41,8 @@ bool data_columns::checkEqualNonZeroColumnLength()
 	return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
+// Returns true if the first character in the line is equal to the comment
+// character. Currently the default value of commentIdentifier is "#".
 bool isCommentedOut(std::string line, std::string commentIdentifier)
 {
 	if(line.empty())
@@ -50,7 +52,7 @@ bool isCommentedOut(std::string line, std::string commentIdentifier)
 }
 ///////////////////////////////////////////////////////////////////////////////
 void getColsFromFile(std::string fileName, data_columns& columns,
-		std::vector<int>& columnIdx, std::string delimiter)
+		const std::vector<int>& columnIdx, std::string delimiter)
 {
 	if(columnIdx.empty())
 		return;

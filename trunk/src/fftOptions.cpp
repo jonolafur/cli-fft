@@ -57,6 +57,11 @@ void fftOptions::addfftOptions()
                         "identical result is obtained");
 }
 ///////////////////////////////////////////////////////////////////////////////
+// This function returns a zero-based vector of indexes of the data columns of
+// the data file provided by the user. The dimension is always 3 invalid
+// entries are set to -1. For example if the user specifies -x 3, -y 5 then
+// the function should return a vector with the entries [2,4,-1]. If the user
+// specified complex data, the returned vector will be: [2,4,5]
 std::vector<int> fftOptions::getZeroBasedColumnIndexes()
 {
 	std::vector<int> colIdx(3,-1);
@@ -75,6 +80,7 @@ std::vector<int> fftOptions::getZeroBasedColumnIndexes()
 	return colIdx;
 }
 ///////////////////////////////////////////////////////////////////////////////
+// Simply returns the delimiter as an std::string type.
 std::string fftOptions::getDelimiterAsString()
 {
 	return std::string(1,var_map["delimiter"].as<char>());
@@ -111,7 +117,7 @@ bool fftOptions::zeroPadSamples() const
 		return false;
 
 	// The linear auto correlation requires zero padding. There are two types of
-	// linear ACF: withe nad without removal of the implicit Bartlett window.
+	// linear ACF: with and without removal of the implicit Bartlett window.
 	return ( var_map["auto-correlate"].as<std::string>() == "l" ||
 			 var_map["auto-correlate"].as<std::string>() == "linear" ||
 			 var_map["auto-correlate"].as<std::string>() == "b" ||
