@@ -112,6 +112,10 @@ void processInput(fftOptions& opt, fftw_vector& fft_vec)
 	if(opt.acf())
 	{
 		fft_vec.acf(opt.removeBartlett());
+
+		if( opt.normalize() )
+			fft_vec.normalizeSquare();
+
 		return;
 	}
 

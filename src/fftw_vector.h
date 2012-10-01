@@ -54,8 +54,10 @@ private:
 	fftw_vector& operator=(const fftw_vector& ){return *this;}
 public:
 	void re_alloc( std::size_t N, bool fftw_estimate);
-	void normalize();
 	double norm() const;
+	void normalize(){ normalizeToValue(sqrt(static_cast<double>(m_size))); }
+	void normalizeSquare(){ normalizeToValue(static_cast<double>(m_size)); }
+	void normalizeToValue(double norm);
 	void fft();
 	void ifft();
 	void acf(bool removeBartlettWindow=false);
@@ -94,6 +96,7 @@ public:
 protected:
 	void free_samples();
 	void copy_sample(fftw_complex& z, double x) const;
+	void copy_sample(fftw_complex& z, const fftw_complex& rhs) const;
 	void removeImplicitBartlettWindow();
 };
 

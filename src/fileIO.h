@@ -45,7 +45,7 @@ public:
 bool isCommentedOut(std::string line, std::string commentIdentifier="#");
 
 void getColsFromFile(std::string fileName,
-		data_columns& columns, std::vector<int>& columnIdx,
+		data_columns& columns, const std::vector<int>& columnIdx,
 		std::string delimiter);
 
 void tokenize(std::vector<std::string>& result, const std::string& inputLine,

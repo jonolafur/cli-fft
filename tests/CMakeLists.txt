@@ -85,7 +85,7 @@ add_test(Test_fft_inverse_Compare ${CMAKE_BINARY_DIR}/ascii_compare
                 -C 2 -d 1e-6 -D 1e-6 )
 
 ## ACF cyclic, real sample
-add_test( Test_ACF_cyc_real ${CMAKE_BINARY_DIR}/fft -A c -x 1 -y 2 -e
+add_test( Test_ACF_cyc_real ${CMAKE_BINARY_DIR}/fft -A c -x 1 -y 2 -e -N
                          -i ${CMAKE_BINARY_DIR}/tests/Test_fft_inverse.txt 
                          -o ${CMAKE_BINARY_DIR}/tests/Test_ACF_cyc_real.txt )
 

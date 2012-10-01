@@ -113,16 +113,17 @@ void fftw_vector::ifft()
 		throw "Attempting to perform IFFT on invalid plan. Maybe the data vector was empty?\n";
 }
 ///////////////////////////////////////////////////////////////////////////////
-void fftw_vector::normalize()
+void fftw_vector::normalizeToValue(double norm)
 {
-	if(m_size == 0)
+	if(norm <= 0)
 		return;
 
-	double norm = sqrt(1.0/double(m_size));
+	double inv_norm = 1.0/norm;
+
 	for(std::size_t i=0; i< m_size; ++i)
 	{
-		m_x[i][0] *= norm;
-		m_x[i][1] *= norm;
+		m_x[i][0] *= inv_norm;
+		m_x[i][1] *= inv_norm;
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -300,6 +301,13 @@ void fftw_vector::copy_sample(fftw_complex& z, double x) const
 	z[0] = x;
 	z[1] = 0.0;
 }
+
+void fftw_vector::copy_sample(fftw_complex& z, const fftw_complex& rhs) const
+{
+	z[0] = rhs[0];
+	z[1] = rhs[1];
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 void fftw_vector::write(const std::string& file_name, bool freq)
 {
