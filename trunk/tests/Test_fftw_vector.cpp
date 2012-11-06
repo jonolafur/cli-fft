@@ -268,14 +268,34 @@ bool test_fftw_vector_normalize()
 	if(std::abs(norm_after-norm_before) >1e-6)
 		return false;
 
-	v.acf();
-	v.normalizeToValue(norm_before*norm_before);
+	v.acf_normalized();
 
 	std::cout << "test_fftw_vector_normalize: ACF(0): real: "
 			<< v.real(0)<<  " imaginary: " << v.imag(0) << '\n';
 
-	return false;
+	if(std::abs(v.abs(0)-1)>1e-8)
+	{
+		std::cout << "Failed norm ACF."<< std::endl;
+		return false;
+	}
+	return true;
 
+}
+
+bool test_acf_GPS()
+{
+	std::ifstream in_code("ref-data/code_GPS_L1_01.txt");
+
+	if(!in_code.good())
+		std::cout << "Test_fftw_vector:test_acf_GPS Failed to open reference code file." << std::endl;
+
+	std::string s;
+
+	in_code >> s;
+
+	std::cout << s << std::endl;
+
+	return false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -300,6 +320,9 @@ int Test_fftw_vector(int , char*[])
 		return ret_fail;
 
 	if(!test_fftw_vector_normalize())
+		return ret_fail;
+
+	if(!test_acf_GPS())
 		return ret_fail;
 
 	return ret_ok;

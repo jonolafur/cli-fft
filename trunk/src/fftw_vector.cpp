@@ -116,7 +116,7 @@ void fftw_vector::ifft()
 void fftw_vector::normalizeToValue(double norm)
 {
 	if(norm <= 0)
-		return;
+		throw "fftw_vector::normalizeToValue: Attempting to normalize to a value smaller than or equal to zero.\n";
 
 	double inv_norm = 1.0/norm;
 
@@ -127,14 +127,25 @@ void fftw_vector::normalizeToValue(double norm)
 	}
 }
 ///////////////////////////////////////////////////////////////////////////////
-double fftw_vector::norm() const
+void fftw_vector::normalizeACF()
 {
-	double norm=0.0;
+	normalizeToValue( sqrt(m_x[0][0]*m_x[0][0] + m_x[0][1]*m_x[0][1]) );
+}
+///////////////////////////////////////////////////////////////////////////////
+double fftw_vector::normSquare() const
+{
+	double normSquare=0.0;
 
 	for(std::size_t i=0; i< m_size; ++i)
-		norm += m_x[i][0]*m_x[i][0] + m_x[i][1]*m_x[i][1];
+		normSquare += m_x[i][0]*m_x[i][0] + m_x[i][1]*m_x[i][1];
 
-	return sqrt(norm);
+	return normSquare;
+}
+///////////////////////////////////////////////////////////////////////////////
+void fftw_vector::acf_normalized(bool removeBartlettWindow)
+{
+	acf(removeBartlettWindow);
+	normalizeACF();
 }
 ///////////////////////////////////////////////////////////////////////////////
 void fftw_vector::acf(bool removeBartlettWindow)
