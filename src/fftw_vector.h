@@ -54,13 +54,15 @@ private:
 	fftw_vector& operator=(const fftw_vector& ){return *this;}
 public:
 	void re_alloc( std::size_t N, bool fftw_estimate);
-	double norm() const;
+	double norm() const {return sqrt(normSquare());}
+	double normSquare() const;
 	void normalize(){ normalizeToValue(sqrt(static_cast<double>(m_size))); }
 	void normalizeSquare(){ normalizeToValue(static_cast<double>(m_size)); }
 	void normalizeToValue(double norm);
 	void fft();
 	void ifft();
 	void acf(bool removeBartlettWindow=false);
+	void acf_normalized(bool removeBartlettWindow=false);
 	void fft_filter(double bw, double f_s);
 	void setSampleTime(double dt);
 	void setSampleFrequency(double df);
@@ -93,7 +95,8 @@ public:
 	template<typename Sample_Type>
 		void set_samples(const std::vector<Sample_Type>& vec, bool fftw_estimate);
 
-protected:
+private:
+	void normalizeACF();
 	void free_samples();
 	void copy_sample(fftw_complex& z, double x) const;
 	void copy_sample(fftw_complex& z, const fftw_complex& rhs) const;
