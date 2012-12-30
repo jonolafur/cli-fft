@@ -6,9 +6,13 @@ set( BIN_NAME ascii_compare )
 
 enable_testing()
 
-set( CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_VERBOSE_MAKEFILE ON)
+
+set(CMAKE_EXE_LINK_DYNAMIC_C_FLAGS)       # remove -Wl,-Bdynamic
+set(CMAKE_EXE_LINK_DYNAMIC_CXX_FLAGS)
+
 if(CMAKE_COMPILER_IS_GNUCXX)
-  set( GCC_WARN_OPTIONS "-Wall -Wextra -pedantic -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wno-pmf-conversions -Wsign-promo -fopenmp")
+  set( GCC_WARN_OPTIONS "-Wall -Wextra -pedantic -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wno-pmf-conversions -Wsign-promo")
   set( CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb3 ${GCC_WARN_OPTIONS}" )
   # The option -O3 will turn optimization.
   # The -static will cause the executable to be statically linked.
@@ -28,8 +32,6 @@ endif(CMAKE_COMPILER_IS_GNUCXX)
 #set( BOOST_INCLUDEDIR "~/bin/boost/" )
 
 find_package( Boost COMPONENTS program_options REQUIRED)
-
-set(Boost_USE_STATIC_LIBS   ON)
 
 message(STATUS "Include boost:  ${BOOST_INCLUDEDIR}" )
 message(STATUS "Will link to Boost: ${Boost_LIBRARIES}" )
@@ -54,14 +56,14 @@ message(STATUS "Copying version file template from: ${VER_TMPL}")
 message(STATUS "Calling SVN version tool from: ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "Location of the version.h file: ${VER_DES}" )
 
-if(WIN32)
+if(CMAKE_SYSTEM_NAME EQUAL "Windows")
 add_custom_command( OUTPUT ${VER_DES}/version.h
                     COMMAND SubWCRev.exe ${CMAKE_CURRENT_SOURCE_DIR} ${VER_TMPL}/version.h.tmpl
                             ${VER_DES}/version.h )
-else(WIN32)
+else(CMAKE_SYSTEM_NAME EQUAL "Windows")
 add_custom_command( OUTPUT ${VER_DES}/version.h
                     COMMAND ${VER_SCRT}/version.sh ${CMAKE_CURRENT_SOURCE_DIR} ${VER_TMPL} ${VER_DES}  )
-endif(WIN32)
+endif(CMAKE_SYSTEM_NAME EQUAL "Windows")
 
 ###########################################################################
 ## Add executable:
