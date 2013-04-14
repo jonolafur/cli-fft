@@ -18,6 +18,7 @@ int main(int argc, char* argv[])
 	const int ret_error = 1;
 	const int ret_ok = 0;
 
+	StreamHandler stream_handler;
 	int ret_val = ret_ok;
 	std::string programName("fft");
 	std::string log_file_name(".fft.log");
@@ -46,6 +47,8 @@ int main(int argc, char* argv[])
 		}
 
 		fftw_vector fft_vec;
+
+		stream_handler.init(opt.inputFile());
 
 		readInput(opt, fft_vec);
 		processInput(opt,fft_vec);
@@ -81,13 +84,13 @@ int main(int argc, char* argv[])
 	return ret_val;
 }
 ///////////////////////////////////////////////////////////////////////////////
-void readInput(fftOptions& opt, fftw_vector& fft_vec)
+void readInput(fftOptions& opt, fftw_vector& fft_vec, StreamHandler& stream_handler)
 {
 	data_columns fft_data;
 
 	std::vector<int> colIdx = opt.getZeroBasedColumnIndexes();
 
-	getColsFromFile(opt.inputFile(), fft_data, colIdx, opt.getDelimiterAsString() );
+	getColsFromFile(stream_handler, fft_data, colIdx, opt.getDelimiterAsString() );
 
 	if(opt.zeroPadSamples())
 		fft_data.zeroPadSamplesByFactorTwo();

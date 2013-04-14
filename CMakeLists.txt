@@ -136,6 +136,10 @@ endif(CMAKE_SYSTEM_NAME EQUAL "Windows")
 add_executable (${BIN_NAME}
    src/main.h
    src/main.cpp
+   src/LogStreamHandler.h
+   src/LogStreamHandler.cpp
+   src/StreamHandler.h
+   src/StreamHandler.cpp
    src/fileIO.h
    src/fileIO.cpp
    src/programOptions.h

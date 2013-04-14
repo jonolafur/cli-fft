@@ -51,7 +51,7 @@ bool isCommentedOut(std::string line, std::string commentIdentifier)
 	return (line[0]==commentIdentifier[0]);
 }
 ///////////////////////////////////////////////////////////////////////////////
-void getColsFromFile(std::string fileName, data_columns& columns,
+void getColsFromFile(StreamHandler& stream_handler, data_columns& columns,
 		const std::vector<int>& columnIdx, std::string delimiter)
 {
 	if(columnIdx.empty())
@@ -59,25 +59,12 @@ void getColsFromFile(std::string fileName, data_columns& columns,
 
 	std::string rawLineFromFile;
 	std::vector<std::string> tokenizedLine;
-	std::istream* in_stream;
-	std::ifstream in_file;
 	int line_count =0;
 	int numberOfReportedErrors = 0;
 
-	// Check and re-direct the input source:
-	if(fileName.empty())
-		in_stream = &std::cin;
-	else
-	{
-		in_file.open( fileName.c_str() );
-		if(!in_file.good())
-			throw "Failed to open input file: "+fileName+"\n";
-		in_stream = &in_file;
-	}
-
 	std::size_t largestColumnIndex = *(std::max_element(columnIdx.begin(), columnIdx.end()));
 
-	while(getline(*in_stream, rawLineFromFile))
+	while(stream_handler.getline(rawLineFromFile))
 	{
 		line_count++;
 		if( isCommentedOut(rawLineFromFile) ) continue;
@@ -102,7 +89,7 @@ void getColsFromFile(std::string fileName, data_columns& columns,
 				if(numberOfReportedErrors < maxNumberOfFailuresToLog)
 				{
 					std::clog << "Failed to interpret field nr.: " << columnIdx[i]
-				          << " at line nr.: " << line_count << " in file: " << fileName << '\n';
+				          << " at line nr.: " << line_count << " in file: " << stream_handler.filename() << '\n';
 				}
 				if(numberOfReportedErrors == maxNumberOfFailuresToLog)
 				{

@@ -28,6 +28,7 @@
 #include <fftw3.h>  // Include Fast Fourier Transform Library
 
 // Project headers:
+#include "StreamHandler.h"
 #include "tty_cols.h"
 #include "fftw_vector.h"
 #include "fftOptions.h"
@@ -38,7 +39,7 @@ namespace po = boost::program_options;
 namespace bpt = boost::posix_time;
 
 ///////////////////////////////////////////////////////////////////////////////
-void readInput(fftOptions& opt, fftw_vector& fft_vec);
+void readInput(fftOptions& opt, fftw_vector& fft_vec, StreamHandler& stream_handler);
 void processInput(fftOptions& opt, fftw_vector& fft_vec);
 void writeOutput(fftOptions& opt, fftw_vector& fft_vec);
 double checkSampleDelta(const std::vector<double>& t);
