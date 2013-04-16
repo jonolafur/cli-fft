@@ -39,6 +39,7 @@ namespace po = boost::program_options;
 namespace bpt = boost::posix_time;
 
 ///////////////////////////////////////////////////////////////////////////////
+void process(fftOptions& opt);
 void readInput(fftOptions& opt, fftw_vector& fft_vec, StreamHandler& stream_handler);
 void processInput(fftOptions& opt, fftw_vector& fft_vec);
 void writeOutput(fftOptions& opt, fftw_vector& fft_vec);
