@@ -34,6 +34,7 @@ create_test_sourcelist( Tests
 # linked to the test driver along with the objects from the
 # sources under test
 add_executable( ${TEST_DRIVER_NAME}
+                ${CMAKE_SOURCE_DIR}/src/StreamHandler.cpp
                 ${CMAKE_SOURCE_DIR}/src/fftw_vector.cpp
                 ${CMAKE_SOURCE_DIR}/src/fileIO.cpp
                 ${Tests} )

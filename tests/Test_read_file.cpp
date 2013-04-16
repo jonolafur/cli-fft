@@ -47,7 +47,10 @@ bool readFile( std::string fileName, std::vector<int> columnIdx, std::size_t num
 	data_columns columns;
 	std::string delimiter = " ";
 
-	getColsFromFile(fileName, columns, columnIdx, delimiter);
+	StreamHandler stream_handler;
+	stream_handler.init(fileName);
+
+	getColsFromFile(stream_handler, columns, columnIdx, delimiter);
 
 	if(columns.size() != columnIdx.size())
 	{
@@ -92,7 +95,10 @@ bool checkColumnLength(std::string fileName, std::size_t numberOfLines )
 	columnIdx.push_back(2);
 	columnIdx.push_back(3);
 
-	getColsFromFile(fileName, columns, columnIdx, delimiter);
+	StreamHandler stream_handler;
+	stream_handler.init(fileName);
+
+	getColsFromFile(stream_handler, columns, columnIdx, delimiter);
 
 	// Change the size of one of the non-zero length cols:
 	columns.m_data[0].resize(numberOfLines*2);

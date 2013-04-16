@@ -24,11 +24,15 @@ public:
 	bool getline(std::string& rawLine);
 	std::string filename();
 	template<typename T>
-	StreamHandler& operator<<(const T& x)
+	StreamHandler& operator<< (const T& x)
 	{
-		m_in_stream << T;
+		(*m_in_stream) << x;
 		return *this;
 	}
+private:
+	// Make non-copy-able:
+	StreamHandler(StreamHandler& ): m_in_stream(NULL), m_in_file(), m_fileName(){};
+	StreamHandler& operator=(const StreamHandler& ){return *this;}
 };
 
 #endif /* STREAMHANDLER_H_ */
