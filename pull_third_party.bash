@@ -2,13 +2,15 @@
 
 ## Retrieveing the local directory:
 CURR_DIR=`pwd`
-TC_ROOT="${CURR_DIR}/tool-chains"
-LIB_ROOT="${CURR_DIR}/libraries"
-DOWNLOADS="${CURR_DIR}/downloads"
+BUILD_DIR="${CURR_DIR}/build"
+TC_ROOT="${BUILD_DIR}/tool-chains"
+LIB_ROOT="${BUILD_DIR}/libraries"
+DOWNLOADS="${BUILD_DIR}/downloads"
 
-mkdir ${TC_ROOT}
-mkdir ${LIB_ROOT}
-mkdir ${DOWNLOADS}
+mkdir ${BUILD_DIR}
+mkdir -p ${TC_ROOT}
+mkdir -p ${LIB_ROOT}
+mkdir -p ${DOWNLOADS}
 
 echo "Tool chains will be located here: ${TC_ROOT}"
 echo "Third party libs will be located here: ${LIB_ROOT}"
