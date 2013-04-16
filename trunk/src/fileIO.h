@@ -44,8 +44,6 @@ public:
 	void zeroPadSamplesByFactorTwo();
 };
 
-bool isCommentedOut(std::string line, std::string commentIdentifier="#");
-
 void getColsFromFile(StreamHandler& stream_handler,
 		data_columns& columns, const std::vector<int>& columnIdx,
 		std::string delimiter);
