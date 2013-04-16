@@ -18,7 +18,6 @@ int main(int argc, char* argv[])
 	const int ret_error = 1;
 	const int ret_ok = 0;
 
-	StreamHandler stream_handler;
 	int ret_val = ret_ok;
 	std::string programName("fft");
 	std::string log_file_name(".fft.log");
@@ -45,16 +44,10 @@ int main(int argc, char* argv[])
 			std::clog.rdbuf(backup);
 			return ret_ok;
 		}
+		
+		process(opt);
 
-		fftw_vector fft_vec;
-
-		stream_handler.init(opt.inputFile());
-
-		readInput(opt, fft_vec, stream_handler);
-		processInput(opt,fft_vec);
-		writeOutput(opt,fft_vec);
-
-	}
+   }
 	catch(std::exception& e)
 	{
 		std::clog << "Error: " << e.what() << std::endl;
@@ -82,6 +75,16 @@ int main(int argc, char* argv[])
 		std::cout << "# Errors were encountered, please see log file: " << log_file_name << std::endl;
 
 	return ret_val;
+}
+///////////////////////////////////////////////////////////////////////////////
+void process(fftOptions& opt)
+{
+	fftw_vector fft_vec;
+	StreamHandler stream_handler(opt.inputFile());
+
+	readInput(opt, fft_vec, stream_handler);
+	processInput(opt,fft_vec);
+	writeOutput(opt,fft_vec);
 }
 ///////////////////////////////////////////////////////////////////////////////
 void readInput(fftOptions& opt, fftw_vector& fft_vec, StreamHandler& stream_handler)
