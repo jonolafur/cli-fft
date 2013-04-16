@@ -41,16 +41,6 @@ bool data_columns::checkEqualNonZeroColumnLength()
 	return true;
 }
 ///////////////////////////////////////////////////////////////////////////////
-// Returns true if the first character in the line is equal to the comment
-// character. Currently the default value of commentIdentifier is "#".
-bool isCommentedOut(std::string line, std::string commentIdentifier)
-{
-	if(line.empty())
-		return true;
-
-	return (line[0]==commentIdentifier[0]);
-}
-///////////////////////////////////////////////////////////////////////////////
 void getColsFromFile(StreamHandler& stream_handler, data_columns& columns,
 		const std::vector<int>& columnIdx, std::string delimiter)
 {
@@ -59,16 +49,12 @@ void getColsFromFile(StreamHandler& stream_handler, data_columns& columns,
 
 	std::string rawLineFromFile;
 	std::vector<std::string> tokenizedLine;
-	int line_count =0;
 	int numberOfReportedErrors = 0;
 
 	std::size_t largestColumnIndex = *(std::max_element(columnIdx.begin(), columnIdx.end()));
 
 	while(stream_handler.getline(rawLineFromFile))
 	{
-		line_count++;
-		if( isCommentedOut(rawLineFromFile) ) continue;
-
 		tokenize(tokenizedLine, rawLineFromFile, delimiter);
 
 		// Only parse lines that have at least as many fields as the largest index:
@@ -89,7 +75,8 @@ void getColsFromFile(StreamHandler& stream_handler, data_columns& columns,
 				if(numberOfReportedErrors < maxNumberOfFailuresToLog)
 				{
 					std::clog << "Failed to interpret field nr.: " << columnIdx[i]
-				          << " at line nr.: " << line_count << " in file: " << stream_handler.filename() << '\n';
+				          << " at line nr.: " << stream_handler.lineCount()
+				          << " in file: " << stream_handler.filename() << '\n';
 				}
 				if(numberOfReportedErrors == maxNumberOfFailuresToLog)
 				{
@@ -99,6 +86,7 @@ void getColsFromFile(StreamHandler& stream_handler, data_columns& columns,
 			}
 		}
 	}
+
 }
 ///////////////////////////////////////////////////////////////////////////////
 void tokenize(std::vector<std::string>& result, const std::string& inputLine,
