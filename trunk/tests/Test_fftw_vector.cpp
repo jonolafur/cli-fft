@@ -295,6 +295,7 @@ bool test_acf_GPS()
 
 	std::cout << s << std::endl;
 
+	std::cout << "Unfinished test: Fails per default!!." << std::endl;
 	return false;
 }
 

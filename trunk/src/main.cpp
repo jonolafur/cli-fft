@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
 
 		stream_handler.init(opt.inputFile());
 
-		readInput(opt, fft_vec);
+		readInput(opt, fft_vec, stream_handler);
 		processInput(opt,fft_vec);
 		writeOutput(opt,fft_vec);
 

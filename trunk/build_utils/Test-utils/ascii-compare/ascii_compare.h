@@ -45,6 +45,9 @@ struct config
 	char comment;
 	char delimiter;
 	int num_compared_lines, num_expected_lines;
+	config():test_file_name(), ref_file_name(), tol_deviation(), tol_max_deviation(),
+			deviation(), max_deviation(), columns(), max_dev_index(), comment('#'),
+			delimiter(' '), num_compared_lines(0), num_expected_lines(0){}
 };
 
 ///////////////////////////////////////////////////////////////////////////////

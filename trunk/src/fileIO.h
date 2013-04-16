@@ -20,6 +20,8 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string.hpp>
 
+#include "StreamHandler.h"
+
 namespace ba = boost::algorithm;
 
 ///////////////////////////////////////////////////////////////////////////////

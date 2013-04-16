@@ -7,7 +7,7 @@
 
 #include "StreamHandler.h"
 
-StreamHandler::StreamHandler() : m_in_stream(NULL), m_in_file()
+StreamHandler::StreamHandler() : m_in_stream(NULL), m_in_file(), m_fileName()
 {}
 
 StreamHandler::~StreamHandler()
