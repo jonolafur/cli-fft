@@ -20,30 +20,18 @@ int main(int argc, char* argv[])
 
 	int ret_val = ret_ok;
 	std::string programName("fft");
-	std::string log_file_name(".fft.log");
-	std::ofstream log_file;
-	std::streambuf* backup=0L;
 	
 	try
 	{
-		log_file_name = makeLogPath(log_file_name);
-		backup = redirect_clog(log_file_name, log_file );
-
 		logHistory(argc, argv);
 
 		fftOptions opt(argc, argv);
 
 		if(opt.writeVersionToConsole(programName))
-		{
-			std::clog.rdbuf(backup);
 			return ret_ok;
-		}
 
 		if(opt.writeHelpToConsole())
-		{
-			std::clog.rdbuf(backup);
 			return ret_ok;
-		}
 		
 		process(opt);
 
@@ -68,8 +56,6 @@ int main(int argc, char* argv[])
 		std::clog << "Exception of unknown type!\n";
 		ret_val = ret_error;
 	}
-
-	std::clog.rdbuf(backup);
 
 	if(ret_error)
 		std::cout << "# Errors were encountered, please see log file: " << log_file_name << std::endl;
@@ -205,45 +191,6 @@ void writeSample(int idx, int offset, fftw_vector& fft, std::ostream* out_stream
 	fft.getSample(x, y, idx, opt.writeMagnitudeAndPhase() );
 
 	(*out_stream) << a << ' ' << x << ' ' << y << '\n';
-}
-///////////////////////////////////////////////////////////////////////////////
-std::streambuf* redirect_clog(std::string log_path,
-                              std::ofstream& log_file)
-{
-	std::streambuf* clog_buffer = std::clog.rdbuf();
-
-	log_file.open(log_path.c_str());
-
-	if(log_file)
-		std::clog.rdbuf( log_file.rdbuf() );
-	else
-	{
-		std::string s = "Failed to open file: " + log_path + "for writing.\n";
-		throw s;
-	}
-
-	return clog_buffer;
-}
-///////////////////////////////////////////////////////////////////////////////
-std::string makeLogPath(std::string log_file_base_name)
-{
-	bool readHomePathOk=false;
-	std::string log_path;
-
-	char* homePath = getenv("HOME");
-
-	if(homePath)
-	{
-		readHomePathOk=true;
-		log_path = std::string( homePath ) + "/" + log_file_base_name;
-	}
-	else
-		log_path = log_file_base_name;
-
-	if(!readHomePathOk)
-		std::cout << "# Unable to retrieve home path. Writing log to current directory.\n";
-
-	return log_path;
 }
 ///////////////////////////////////////////////////////////////////////////////
 void logHistory( int a, char* av[] )
