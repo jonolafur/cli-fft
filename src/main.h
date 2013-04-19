@@ -29,6 +29,7 @@
 
 // Project headers:
 #include "StreamHandler.h"
+#include "LogStreamHandler.h"
 #include "tty_cols.h"
 #include "fftw_vector.h"
 #include "fftOptions.h"

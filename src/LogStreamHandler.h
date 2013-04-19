@@ -13,19 +13,31 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
+#include <fstream>
+#include <cstdlib>
 
 class LogStreamHandler {
 private:
-   std::string      log_file_name;
+   std::string      log_file_path;
+   std::string      log_file_base_name;
    std::ofstream    log_file;
-   std::streambuf*  backup;
+   std::streambuf*  clog_buffer;
 
 public:
 	LogStreamHandler();
 	virtual ~LogStreamHandler();
    
-   void redirect_clog( std::string log_path, std::ofstream& log_file );
-   voi makeLogPath( std::string log_file_base_name );
+   std::string fileName(){return log_file_path;}
+   void redirect_clog_toFileInHomeDir( const std::string& fileName );
+
+protected:
+   void redirect_clog(  );
+   void makeLogPath(  );
+
+private:
+   // Make non-copy-able:
+   LogStreamHandler(LogStreamHandler& ): log_file_path(), log_file_base_name(), log_file(), clog_buffer(nullptr){};
+   LogStreamHandler& operator=(const LogStreamHandler& ){return *this;}
 
 };
 

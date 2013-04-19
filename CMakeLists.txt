@@ -14,7 +14,7 @@ set(CMAKE_FIND_LIBRARY_SUFFIXES .lib .a)
 set(BUILD_UTILS "build_utils")
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-  set( GCC_WARN_OPTIONS "-Wall -Wextra -pedantic -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wno-pmf-conversions -Wsign-promo")
+  set( GCC_WARN_OPTIONS "-std=c++11 -Wall -Wextra -pedantic -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wno-pmf-conversions -Wsign-promo")
   set( CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb3 ${GCC_WARN_OPTIONS}" )
   # The option -O3 will turn optimization.
   # The -static will cause the executable to be statically linked.

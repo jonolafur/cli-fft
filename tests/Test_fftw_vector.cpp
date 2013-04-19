@@ -287,7 +287,7 @@ bool test_acf_GPS()
 	std::ifstream in_code("ref-data/code_GPS_L1_01.txt");
 
 	if(!in_code.good())
-		std::cout << "Test_fftw_vector:test_acf_GPS Failed to open reference code file." << std::endl;
+		throw "Test_fftw_vector:test_acf_GPS Failed to open reference code file.";
 
 	std::string s;
 
@@ -295,7 +295,8 @@ bool test_acf_GPS()
 
 	std::cout << s << std::endl;
 
-	std::cout << "Unfinished test: Fails per default!!." << std::endl;
+	throw "Unfinished test: Fails per default!!.";
+   
 	return false;
 }
 
