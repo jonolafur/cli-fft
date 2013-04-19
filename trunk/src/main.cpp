@@ -18,6 +18,10 @@ int main(int argc, char* argv[])
 	const int ret_error = 1;
 	const int ret_ok = 0;
 
+   LogStreamHandler log_stream_handler;
+   
+   log_stream_handler.redirect_clog_toFileInHomeDir(".fft.log");
+   
 	int ret_val = ret_ok;
 	std::string programName("fft");
 	
@@ -58,7 +62,7 @@ int main(int argc, char* argv[])
 	}
 
 	if(ret_error)
-		std::cout << "# Errors were encountered, please see log file: " << log_file_name << std::endl;
+		std::cout << "# Errors were encountered, please see log file: " << log_stream_handler.fileName() << std::endl;
 
 	return ret_val;
 }

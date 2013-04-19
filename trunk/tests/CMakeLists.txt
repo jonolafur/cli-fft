@@ -28,12 +28,14 @@ create_test_sourcelist( Tests
 	Test_fftw_mul_conj.cpp
 	Test_fftw_vector.cpp
 	Test_fftw_add.cpp
-	Test_fftw_normalize.cpp )
+	Test_fftw_normalize.cpp 
+	Test_LogStreamHandler.cpp )
 
 # Create the test driver target. All test source files are
 # linked to the test driver along with the objects from the
 # sources under test
 add_executable( ${TEST_DRIVER_NAME}
+                ${CMAKE_SOURCE_DIR}/src/LogStreamHandler.cpp
                 ${CMAKE_SOURCE_DIR}/src/StreamHandler.cpp
                 ${CMAKE_SOURCE_DIR}/src/fftw_vector.cpp
                 ${CMAKE_SOURCE_DIR}/src/fileIO.cpp
