@@ -27,21 +27,15 @@ void LogStreamHandler::redirect_clog_toFileInHomeDir(const std::string& fileName
 ///////////////////////////////////////////////////////////////////////////////
 void LogStreamHandler::makeLogPath()
 {
-   bool readHomePathOk=false;
-
    char* homePath = getenv("HOME");
 
    if(homePath)
-   {
-      readHomePathOk=true;
       log_file_path = std::string( homePath ) + "/" + log_file_base_name;
-   }
    else
+   {
       log_file_path = log_file_base_name;
-
-   if(!readHomePathOk)
       std::cout << "# Unable to retrieve home path. Writing log to current directory.\n";
-
+   }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
