@@ -18,14 +18,14 @@ echo "Downloaded files will be located here: ${DOWNLOADS}"
 
 ###############################################################
 ## mingw32-w64 tool chain.
-TC_URL="http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Automated%20Builds"
+TC_MINGW32_URL="http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Automated%20Builds"
 TC_MINGW32_PREFIX="i686-w64-mingw32"
-TC_MINGW32_TAR_BALL="mingw-w32-bin_i686-linux_20121015.tar.bz2"
+TC_MINGW32_TAR_BALL="mingw-w32-bin_i686-linux_20130515.tar.bz2"
 TC_MINGW32_ROOT="${TC_ROOT}/mingw-w32-bin_i686-linux"
 
 echo "Retrieving the ${TC_MINGW32_PREFIX} tool chain using wget..."
 
-wget --continue --directory-prefix=${DOWNLOADS} ${TC_URL}/${TC_MINGW32_TAR_BALL}
+wget --continue --directory-prefix=${DOWNLOADS} ${TC_MINGW32_URL}/${TC_MINGW32_TAR_BALL}
 
 mkdir -p ${TC_MINGW32_ROOT}
 
