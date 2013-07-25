@@ -3,12 +3,14 @@
 #include <windows.h>
 #endif
 
+#include <unistd.h>
+
 void milli_sleep(int milli_sec)
 {
-#ifdef _WIN32
-	Sleep(milli_sec);
-#else
+#ifdef __GNUC__
 	usleep(1000*milli_sec);
+#else
+	Sleep(milli_sec);
 #endif
 }
 
