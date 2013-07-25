@@ -2,6 +2,15 @@
 
 #include "LogStreamHandler.h"
 
+void removeHomeFromEnvironment()
+{
+#if defined __MINGW32__
+   putenv("HOME=");
+#else
+    unsetenv("HOME");
+#endif
+  
+}
 
 bool test_logfile_in_home_dir()
 {
@@ -42,9 +51,10 @@ int Test_LogStreamHandler(int, char*[] )
       return ret_fail;
    
    // Unset the "HOME" variable (this is used internally in
-   // redirect_clog_toFileInHomeDir). This should provoke 
+   // redirect_clog_toFileInHomeDir). This should provoke
+   // failure to put the log file in the home dir.
    
-   int tmp = unsetenv("HOME");
+   void removeHomeFromEnvironment();
    
    if(!test_logfile_in_home_dir())
       return ret_fail;
