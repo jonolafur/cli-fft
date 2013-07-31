@@ -2,8 +2,15 @@
 ## Build date of MinGW-64 tool chain
 MINGW_BUILD_DATE="20130622"
 BOOST_MIN_VER="54" #Currently using boost 1.54.0
-HOST_ARCH="x86_64" #i686
-TARGET_ARCH="i686"
+
+HOST_ARCH="x86_64"     #Set to "i686" if building on a 32 bit Linux
+TARGET_ARCH="x86_64"
+NUM_BIT="32"
+
+if [ ${TARGET_ARCH} == "x86_64" ]; then
+  echo "Configuring for 64-bit windows target."
+  NUM_BIT="64"
+fi
 
 ## Retrieveing the local directory:
 CURR_DIR=`pwd`
@@ -32,8 +39,8 @@ echo "Downloaded files will be located here: ${DOWNLOADS}"
 
 ###############################################################
 ## 32 bit target mingw-w64 tool chain.
-TC_MINGW_URL="http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Automated%20Builds"
-TC_ID="mingw-w32-bin_${HOST_ARCH}-linux"
+TC_MINGW_URL="http://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win${NUM_BIT}/Automated%20Builds"
+TC_ID="mingw-w${NUM_BIT}-bin_${HOST_ARCH}-linux"
 TC_MINGW_PREFIX="${TARGET_ARCH}-w64-mingw32"
 TC_MINGW_TAR_BALL="${TC_ID}_${MINGW_BUILD_DATE}.tar.bz2"
 TC_MINGW_ROOT="${TC_ROOT}/${TC_ID}"
@@ -121,13 +128,13 @@ echo "Generating a cmake tool chain file for ${TC_MINGW_PREFIX}:"
 
 cat mingw.cmake.template | sed -e "s:set(TC_PREFIX:& ${TC_MINGW_PREFIX}:" \
                                -e "s:set(CMAKE_FIND_ROOT_PATH:& ${TC_MINGW_ROOT} ${TC_MINGW_ROOT}/${TC_MINGW_PREFIX}:"\
-                               > mingw32.cmake
-mkdir -p build/mingw32
-cd build/mingw32
+                               > mingw_${TARGET_ARCH}.cmake
+mkdir -p build/mingw64_${TARGET_ARCH}
+cd build/mingw64_${TARGET_ARCH}
 
-echo "Starting cmake with the mingw32.cmake tool chain file to build for ${TC_MINGW_PREFIX}:"
+echo "Starting cmake with the mingw_${TARGET_ARCH}.cmake tool chain file to build for ${TC_MINGW_PREFIX}:"
 
-rm -rf * && cmake -DCMAKE_TOOLCHAIN_FILE=../../mingw32.cmake -DCMAKE_BUILD_TYPE=release ../../
+rm -rf * && cmake -DCMAKE_TOOLCHAIN_FILE=../../mingw_${TARGET_ARCH}.cmake -DCMAKE_BUILD_TYPE=release ../../
 
 
 
