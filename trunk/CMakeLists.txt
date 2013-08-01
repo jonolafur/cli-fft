@@ -6,37 +6,41 @@ enable_testing()
 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
-## The following is nneded to make sure cmake doesn't add in spurious linker flags:
+## The following is neded to make sure cmake doesn't add in spurious linker flags:
 set(CMAKE_EXE_LINK_DYNAMIC_C_FLAGS)       # remove -Wl,-Bdynamic
 set(CMAKE_EXE_LINK_DYNAMIC_CXX_FLAGS)
+set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS)   # Remove -rdynamic
+set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS)
 set(CMAKE_FIND_LIBRARY_SUFFIXES .lib .a)
 
 set(BUILD_UTILS "build_utils")
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-  set( GCC_WARN_OPTIONS "-std=c++11 -Wall -Wextra -pedantic -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wno-pmf-conversions -Wsign-promo")
-  set( CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb3 ${GCC_WARN_OPTIONS}" )
+  set( GCC_CXX_BASIC_BUILD_OPTIONS " -std=c++11 -static -static-libgcc -static-libstdc++ ")
+  set( GCC_WARN_OPTIONS " -Wall -Wextra -pedantic -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wno-pmf-conversions -Wsign-promo ")
+
+  set( CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb3 ${GCC_CXX_BASIC_BUILD_OPTIONS} ${GCC_WARN_OPTIONS}" )
   # The option -O3 will turn optimization.
   # The -static will cause the executable to be statically linked.
   # Now it should no longer be required to specify this when calling cmake.
   # The option -s will remove all symbol table and relocation information from the executable.
-  set( CMAKE_CXX_FLAGS_RELEASE "-O3 -static -s ${GCC_WARN_OPTIONS}" )
+  set( CMAKE_CXX_FLAGS_RELEASE "-O3 -s ${GCC_CXX_BASIC_BUILD_OPTIONS} ${GCC_WARN_OPTIONS}" )
 endif(CMAKE_COMPILER_IS_GNUCXX)
 
 if(MSVC)
-    foreach(flag_var CMAKE_C_FLAGS_DEBUG CMAKE_CXX_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELEASE CMAKE_C_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO CMAKE_CXX_FLAGS_RELWITHDEBINFO) 
+    foreach(flag_var CMAKE_C_FLAGS_DEBUG CMAKE_CXX_FLAGS_DEBUG CMAKE_C_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELEASE CMAKE_C_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_C_FLAGS_RELWITHDEBINFO CMAKE_CXX_FLAGS_RELWITHDEBINFO)
         string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
         string(REGEX REPLACE "/MDd" "/MTd" ${flag_var} "${${flag_var}}")
     endforeach(flag_var)
-    SET (CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}" CACHE STRING "MSVC C Debug MT flags " FORCE)    
+    SET (CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG}" CACHE STRING "MSVC C Debug MT flags " FORCE)
     SET (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}" CACHE STRING "MSVC CXX Debug MT flags " FORCE)
     SET (CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE}" CACHE STRING "MSVC C Release MT flags " FORCE)
     SET (CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}" CACHE STRING "MSVC CXX Release MT flags " FORCE)
-    SET (CMAKE_C_FLAGS_MINSIZEREL "${CMAKE_C_FLAGS_MINSIZEREL}" CACHE STRING "MSVC C Debug MT flags " FORCE)    
+    SET (CMAKE_C_FLAGS_MINSIZEREL "${CMAKE_C_FLAGS_MINSIZEREL}" CACHE STRING "MSVC C Debug MT flags " FORCE)
     SET (CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL}" CACHE STRING "MSVC C Release MT flags " FORCE)
-    SET (CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO}" CACHE STRING "MSVC CXX Debug MT flags " FORCE)    
+    SET (CMAKE_C_FLAGS_RELWITHDEBINFO "${CMAKE_C_FLAGS_RELWITHDEBINFO}" CACHE STRING "MSVC CXX Debug MT flags " FORCE)
     SET (CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}" CACHE STRING "MSVC CXX Release MT flags " FORCE)
-	
+
 	ADD_DEFINITIONS (/D _CRT_SECURE_NO_WARNINGS /D _SCL_SECURE_NO_WARNINGS)
 endif()
 
@@ -69,7 +73,7 @@ message(STATUS "Will include boost libs from here: ${Boost_LIBRARY_DIRS}" )
 message(STATUS "Will include boost headers from here: ${Boost_INCLUDE_DIR}" )
 
 #####################################################################################
-### Support version generation in source code ####################################### 
+### Support version generation in source code #######################################
 find_path( VER_TMPL version.h.tmpl
             PATHS
             ${BUILD_UTILS}/Templates )
@@ -103,7 +107,7 @@ find_library( LIB_FFTW
               PATHS /usr/lib
                     /usr/lib64
                     /lib
-                    /usr/local/lib 
+                    /usr/local/lib
                     c:/fftw3
                     c:/fftw )
 
@@ -117,15 +121,15 @@ set( VER_DES ${CMAKE_CURRENT_BINARY_DIR} )
 set( BIN_NAME fft )
 set( INST_DIR ~/bin )
 
-include_directories ( ${VER_DES} 
-                      ${INCLUDE_FFTW} 
+include_directories ( ${VER_DES}
+                      ${INCLUDE_FFTW}
 					  ${Boost_INCLUDE_DIR} )
 
 message(STATUS "Calling SVN version tool from: ${CMAKE_CURRENT_SOURCE_DIR}")
 
 if(CMAKE_SYSTEM_NAME EQUAL "Windows")
 add_custom_command( OUTPUT ${VER_DES}/version.h
-                    COMMAND SubWCRev.exe ${CMAKE_CURRENT_SOURCE_DIR} ${VER_TMPL}/version.h.tmpl 
+                    COMMAND SubWCRev.exe ${CMAKE_CURRENT_SOURCE_DIR} ${VER_TMPL}/version.h.tmpl
                             ${VER_DES}/version.h )
 else(CMAKE_SYSTEM_NAME EQUAL "Windows")
 add_custom_command( OUTPUT ${VER_DES}/version.h
@@ -154,7 +158,7 @@ add_executable (${BIN_NAME}
    ${VER_DES}/version.h)
 
 # For the details on the names of the variables involving the
-# finding and using of boost, refer to the FindBoost.cmake 
+# finding and using of boost, refer to the FindBoost.cmake
 # module. The following tells the linker to link the
 # program_options library file from boost (the program_options
 # component from the boost package in cmake speak)
