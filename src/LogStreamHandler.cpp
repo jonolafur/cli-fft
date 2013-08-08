@@ -30,12 +30,24 @@ void LogStreamHandler::makeLogPath()
    char* homePath = getenv("HOME");
 
    if(homePath)
+   {
       log_file_path = std::string( homePath ) + "/" + log_file_base_name;
+      return;
+   }
    else
    {
-      log_file_path = log_file_base_name;
-      std::cout << "# Unable to retrieve home path. Writing log to current directory.\n";
+      homePath = getenv("HOMEPATH");
+      char* homeDrive = getenv("HOMEDRIVE");
+      
+      if(homePath && homeDrive)
+      {
+         log_file_path = std::string( homeDrive )+std::string( homePath ) + "/" + log_file_base_name;
+         return;
+      }
    }
+
+   log_file_path = log_file_base_name;
+   std::cout << "# Unable to retrieve home path. Writing log to current directory.\n";
 }
 
 ///////////////////////////////////////////////////////////////////////////////
