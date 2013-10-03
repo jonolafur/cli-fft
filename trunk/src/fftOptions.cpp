@@ -42,6 +42,7 @@ void fftOptions::addfftOptions()
 			"\'b\' \tor \'no-bartlett\': Same as \'linear\', except the implicit Bartlett windowing is removed, i.e. the samples are "
 			"normalized with N-|l|, where N is the number of samples and l is the lag.")
 	("complex,c","Perform transformations on complex data. See -y option below.")
+   ("sample-rate,s", po::value<double>(), "Specify sample rate to generate a corresponding frequency axis.")
 	("x-values,x", po::value<int>()->default_value(0),
 			"x-values: fft will infer the frequency from the first two elements. "
 			"If a non-uniformity is detected, fft will exit. The column numbering is 1-based."

@@ -144,19 +144,25 @@ double fftw_vector::normSquare() const
 ///////////////////////////////////////////////////////////////////////////////
 void fftw_vector::acf_normalized(bool removeBartlettWindow)
 {
-	acf(removeBartlettWindow);
+   acf_unscaled(removeBartlettWindow);
 	normalizeACF();
+}
+///////////////////////////////////////////////////////////////////////////////
+void fftw_vector::acf_unscaled(bool removeBartlettWindow)
+{
+   // It is assumed that the vector has already been zero-padded.
+   fft();
+   mult_conj(*this);
+   ifft();
+
+   if(removeBartlettWindow)
+      removeImplicitBartlettWindow();
 }
 ///////////////////////////////////////////////////////////////////////////////
 void fftw_vector::acf(bool removeBartlettWindow)
 {
-	// It is assumed that the vector has already been zero-padded.
-	fft();
-	mult_conj(*this);
-	ifft();
-
-	if(removeBartlettWindow)
-		removeImplicitBartlettWindow();
+   acf_unscaled(removeBartlettWindow);
+   normalizeToValue(size());
 }
 ///////////////////////////////////////////////////////////////////////////////
 void fftw_vector::removeImplicitBartlettWindow()
@@ -165,7 +171,7 @@ void fftw_vector::removeImplicitBartlettWindow()
 	double d_i = 1.0;
 	for( std::size_t i=1; i<size()/2; ++i, d_i +=1.0) // The value at i=0 is already normalized
 	{
-		double norm = N/(N-d_i);
+      double norm = N/(N-d_i);
 		m_x[i][0] *= norm;
 		m_x[i][1] *= norm;
 		m_x[size()-i][0] *= norm;
@@ -249,11 +255,7 @@ void fftw_vector::setSampleFrequency(double df)
 	if(df < std::numeric_limits<double>::epsilon() )
 		throw "fftw_vector::setSampleFrequency: too small sample frequency!";
 
-	if(size() == 0 )
-		throw "fftw_vector::setSampleFrequency: Sample vector is empty. Cannot set sample frequency.";
-
-	m_Df = df;
-	m_Dt = 1.0/( m_Df*static_cast<double>(size()) );
+   setSampleTime(1.0/df);
 }
 ///////////////////////////////////////////////////////////////////////////////
 void fftw_vector::fft_filter(double bw, double f_s)
@@ -300,6 +302,18 @@ void fftw_vector::free_samples()
 		fftw_free(m_x);
 	m_x = 0;
 	m_size = 0;
+}
+///////////////////////////////////////////////////////////////////////////////
+void fftw_vector::push_back(const double real, const double imag)
+{
+   if(m_idx<m_size)
+   {
+      m_x[m_idx][0] = real;
+      m_x[m_idx][1] = imag;
+      m_idx++;
+      return;
+   }
+   throw "Buffer full in fftw_vector.";
 }
 ///////////////////////////////////////////////////////////////////////////////
 /**
