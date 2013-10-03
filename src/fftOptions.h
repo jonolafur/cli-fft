@@ -22,6 +22,8 @@ public:
 	std::string inputFile();
 	std::string outputFile();
 	char delimiter(){return var_map["delimiter"].as<char>();}
+   bool sampleWasRateSpecified() const {return var_map.count("sample-rate")!=0 ;}
+   double getSampleRate() const {return var_map["sample-rate"].as<double>();}
 	bool xAxisSpecified() const {return x_value_Idx()!=0;}
 	bool orderSamples() const {return (var_map.count("ordered-x-axis")!=0 && !positiveAxisOnly() );}
 	bool positiveAxisOnly() const {return ( var_map.count("positive-only")!=0 && !isComplex() );}

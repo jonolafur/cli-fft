@@ -28,8 +28,9 @@ create_test_sourcelist( Tests
 	Test_fftw_mul_conj.cpp
 	Test_fftw_vector.cpp
 	Test_fftw_add.cpp
-	Test_fftw_normalize.cpp 
-	Test_LogStreamHandler.cpp )
+   Test_fftw_normalize.cpp
+   Test_fftw_samplerate.cpp
+   Test_LogStreamHandler.cpp )
 
 # Create the test driver target. All test source files are
 # linked to the test driver along with the objects from the

@@ -41,7 +41,7 @@ public:
 private:
 	// Make non-copy-able:
 	StreamHandler(StreamHandler& ): m_in_stream(NULL), m_in_file(), m_fileName(),
-	m_commentChar('#'), m_lineCount(0), m_readLineCount(0) {};
+    m_commentChar('#'), m_lineCount(0), m_readLineCount(0) {}
 	StreamHandler& operator=(const StreamHandler& ){return *this;}
 };
 

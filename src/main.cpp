@@ -101,6 +101,9 @@ void readInput(fftOptions& opt, fftw_vector& fft_vec, StreamHandler& stream_hand
 		else
 			fft_vec.setSampleTime(dx);
 	}
+
+   if(opt.sampleWasRateSpecified())
+      fft_vec.setSampleFrequency(opt.getSampleRate());
 }
 ///////////////////////////////////////////////////////////////////////////////
 void processInput(fftOptions& opt, fftw_vector& fft_vec)

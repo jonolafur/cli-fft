@@ -46,7 +46,7 @@ protected:
 
 public:
 	fftw_vector() : m_x(0L), m_pFwdPlan(),m_pBwdPlan(), m_size(0L),
-                   m_idx(0L), m_plan_mode(FFTW_MEASURE),m_Df(1.0), m_Dt(1.0) {};
+                   m_idx(0L), m_plan_mode(FFTW_MEASURE),m_Df(1.0), m_Dt(1.0) {}
 	virtual ~fftw_vector();
 private:
 	fftw_vector(const fftw_vector& ): m_x(0L), m_pFwdPlan(),m_pBwdPlan(), m_size(0L),
@@ -71,8 +71,9 @@ public:
 	std::size_t size() const {return m_size;}
 	double frequency(int i) const {return static_cast<double>(i)*m_Df;}
 	double time(int i) const {return static_cast<double>(i)*m_Dt;}
-	double sampleTime() const {return m_Dt;}
-	void write(const std::string& file_name, bool freq=true);
+   double sampleTime() const {return m_Dt;}
+   double sampleFrequency() const {return m_Df;}
+   void write(const std::string& file_name, bool freq=true);
 	polar getPolar(int idx);
 	double abs(int idx) const {return sqrt(m_x[idx][0]*m_x[idx][0]+ m_x[idx][1]*m_x[idx][1]);}
 	double arg(int idx) const {return atan2(m_x[idx][1],m_x[idx][0]);}
@@ -89,7 +90,9 @@ public:
 
 	void set_samples(const std::vector<double>& real, const std::vector<double>& imag, bool fftw_estimate);
 
-	template<typename Sample_Type>
+   void push_back(const double real, const double imag);
+
+   template<typename Sample_Type>
 		void push_back(const Sample_Type& sample);
 
 	template<typename Sample_Type>
@@ -100,7 +103,8 @@ private:
 	void free_samples();
 	void copy_sample(fftw_complex& z, double x) const;
 	void copy_sample(fftw_complex& z, const fftw_complex& rhs) const;
-	void removeImplicitBartlettWindow();
+   void removeImplicitBartlettWindow();
+   void acf_unscaled(bool removeBartlettWindow);
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -126,6 +130,25 @@ void fftw_vector::push_back(const Sample_Type& sample)
 		m_idx++;
 	}
 }
+
+///////////////////////////////////////////////////////////////////////////////
+inline int findLargestPowerSample(const fftw_vector& vec)
+{
+   double max_magnitude=0.0;
+   double magnitude=0.0;
+   int maxIdx = 0;
+   for(auto i=0ul; i<vec.size(); i++)
+   {
+      magnitude =  vec.abs(i);
+      if(magnitude>max_magnitude)
+      {
+         max_magnitude = magnitude;
+         maxIdx = i;
+      }
+   }
+   return maxIdx;
+}
+
 
 #endif // FFTW_VECTOR_H
 
