@@ -34,6 +34,9 @@
 #include "fftw_vector.h"
 #include "fftOptions.h"
 #include "fileIO.h"
+
+using std::vector;
+
 ///////////////////////////////////////////////////////////////////////////////
 // short hand for program option name space...
 namespace po = boost::program_options;

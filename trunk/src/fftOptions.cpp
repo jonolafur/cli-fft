@@ -55,7 +55,8 @@ void fftOptions::addfftOptions()
 			"subsequent IFFT is performed, the result will be scaled by a factor of N, where N "
 			"is the number of samples. With this option the transformed result (FFT or IFFT) "
 			"is normalized by sqrt(N), thus ensuring that after an FFT-IFFT cycle the "
-                        "identical result is obtained");
+                        "identical result is obtained")
+   ("batches,B",po::value<size_t>()->default_value(1),"Number of batches to divide the sample set.");
 }
 ///////////////////////////////////////////////////////////////////////////////
 // This function returns a zero-based vector of indexes of the data columns of
@@ -132,6 +133,11 @@ bool fftOptions::removeBartlett() const
 
 	return ( var_map["auto-correlate"].as<std::string>() == "b" ||
 	         var_map["auto-correlate"].as<std::string>() == "no-bartlett" );
+}
+
+size_t fftOptions::getNumBatches() const
+{
+   return var_map["batches"].as<size_t>();
 }
 
 

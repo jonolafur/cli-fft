@@ -6,17 +6,11 @@ enable_testing()
 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
-## The following is neded to make sure cmake doesn't add in spurious linker flags:
-set(CMAKE_EXE_LINK_DYNAMIC_C_FLAGS)       # remove -Wl,-Bdynamic
-set(CMAKE_EXE_LINK_DYNAMIC_CXX_FLAGS)
-set(CMAKE_SHARED_LIBRARY_LINK_C_FLAGS)   # Remove -rdynamic
-set(CMAKE_SHARED_LIBRARY_LINK_CXX_FLAGS)
-set(CMAKE_FIND_LIBRARY_SUFFIXES .lib .a)
 
 set(BUILD_UTILS "build_utils")
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-  set( GCC_CXX_BASIC_BUILD_OPTIONS " -std=c++11 -static -static-libgcc -static-libstdc++ ")
+  set( GCC_CXX_BASIC_BUILD_OPTIONS " -std=c++11 ")
   set( GCC_WARN_OPTIONS " -Wall -Wextra -pedantic -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wno-pmf-conversions -Wsign-promo ")
 
   set( CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb3 ${GCC_CXX_BASIC_BUILD_OPTIONS} ${GCC_WARN_OPTIONS}" )

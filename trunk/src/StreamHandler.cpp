@@ -41,12 +41,19 @@ void StreamHandler::init(const std::string& fileName, char commentChar)
 
 bool StreamHandler::getline(std::string& rawLine)
 {
-	bool ret = std::getline(*m_in_stream, rawLine);
-	m_lineCount++;
+	bool ret = false;
+        if(std::getline(*m_in_stream, rawLine))
+            ret = true;
+
+        m_lineCount++;
 
 	while(isCommentedOut(rawLine) && ret)
 	{
-		ret = std::getline(*m_in_stream, rawLine);
+		if(std::getline(*m_in_stream, rawLine))
+                    ret = true;
+                else
+                    ret= false;
+                
 		m_lineCount++;
 	}
 
