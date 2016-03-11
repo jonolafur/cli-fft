@@ -125,6 +125,20 @@ void processInput(fftOptions& opt, fftw_vector& fft_vec)
 
 	if( opt.normalize() )
 		fft_vec.normalize();
+   
+   if(opt.getNumBatches() > 1)
+   {
+      size_t n = fft_vec.size()/opt.getNumBatches();
+      vector<double> re(n,0.0);
+
+      size_t j=0;
+      for(size_t i=0; i<n; i++)
+      {
+         for(size_t k=0; k<opt.getNumBatches(); k++)
+            re[i] += fft_vec.abs(j++);
+      }
+      fft_vec.set_samples(re, true);
+   }
 }
 ///////////////////////////////////////////////////////////////////////////////
 void writeOutput(fftOptions& opt, fftw_vector& fft_vec)
@@ -145,9 +159,8 @@ void writeOutput(fftOptions& opt, fftw_vector& fft_vec)
 
 	if(opt.orderSamples())
 		writeOrdered(fft_vec, out_stream, opt);
-
-	writeStandard(fft_vec, out_stream, opt );
-
+   else
+      writeStandard(fft_vec, out_stream, opt );
 }
 ///////////////////////////////////////////////////////////////////////////////
 double checkSampleDelta(const std::vector<double>& t)

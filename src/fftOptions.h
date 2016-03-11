@@ -35,6 +35,8 @@ public:
 	bool removeBartlett() const;
 	bool writeMagnitudeAndPhase() const {return var_map.count("magnitude-phase") !=0;}
 	bool inverseFFT() const {return var_map.count("inverse") !=0;}
+	size_t getNumBatches() const;
+
 
 protected:
 	void addfftOptions();
