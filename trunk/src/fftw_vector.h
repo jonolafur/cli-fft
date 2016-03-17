@@ -53,10 +53,10 @@ public:
 
 public:
    void re_alloc( std::size_t N, bool fftw_estimate = FFTW_ESTIMATE);
-   double norm() const {return sqrt(normSquare());}
+   double norm() const;
    double normSquare() const;
-   void normalize(){ normalizeToValue(sqrt(static_cast<double>(m_size))); }
-   void normalizeSquare(){ normalizeToValue(static_cast<double>(m_size)); }
+   void normalize();
+   void normalizeSquare();
    void normalizeToValue(double norm);
    void fft();
    void ifft();

@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
       ret_val = ret_error;
    }
 
-   if(ret_error)
+   if(ret_val == ret_error)
       std::cout << "# Errors were encountered, please see log file: " << log_stream_handler.fileName() << std::endl;
 
    return ret_val;
@@ -145,6 +145,7 @@ void processInput(fftOptions& opt, fftw_vector& fft_vec)
       fft_vec = result_vec;
 
       fft_vec.setSampleTime( dt );
+      fft_vec.normalizeToValue( fft_vec.norm()/dt );
       return;
    }
 
