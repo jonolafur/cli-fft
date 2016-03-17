@@ -13,7 +13,45 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include "fftw_vector.h"
-///////////////////////////////////////////////////////////////////////////////
+
+fftw_vector::fftw_vector() : m_x(0L), m_pFwdPlan(),m_pBwdPlan(), m_size(0L),
+m_idx(0L), m_plan_mode(FFTW_ESTIMATE),m_Df(1.0), m_Dt(1.0)
+{}
+
+
+fftw_vector::fftw_vector(size_t size, double real, double imag) : m_x(0L), m_pFwdPlan(), m_pBwdPlan(), m_size(0L),
+m_idx(0L), m_plan_mode(FFTW_ESTIMATE),m_Df(1.0), m_Dt(1.0)
+{
+   re_alloc(size, m_plan_mode);
+   initAll(real, imag);   
+}
+
+
+fftw_vector::fftw_vector(fftw_vector& fft_vec) : m_x(0L), m_pFwdPlan(), m_pBwdPlan(), m_size(0L),
+m_idx(0L), m_plan_mode(FFTW_ESTIMATE),m_Df(1.0), m_Dt(1.0)
+{
+   *this = fft_vec;
+}
+
+
+fftw_vector& fftw_vector::operator=( const fftw_vector& rhs)
+{
+   re_alloc( rhs.size(), rhs.m_plan_mode );
+
+   for(std::size_t i=0; i<m_size; i++)
+   {
+      m_x[i][0]= rhs.m_x[i][0];
+      m_x[i][1]= rhs.m_x[i][1];
+   }
+   
+   m_Df = rhs.m_Df;
+   m_Dt = rhs.m_Dt;
+   m_idx = rhs.m_idx;
+   
+   return *this;
+}
+
+
 fftw_vector::~fftw_vector()
 {
 	free_samples();
@@ -96,7 +134,18 @@ void fftw_vector::re_alloc( std::size_t N, bool fftw_estimate)
 	else
 		std::clog << "Warning: failed to write wisdom to: " << fftw_wizdom_file_name << '\n';
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
+void fftw_vector::initAll(double real, double imag)
+{
+   for(size_t i = 0; i<m_size; i++)
+   {
+      m_x[i][0] = real;
+      m_x[i][1] = imag;
+   }
+}
+
+
 void fftw_vector::fft()
 {
 	if(m_pFwdPlan)
@@ -104,7 +153,8 @@ void fftw_vector::fft()
 	else
 		throw "Attempting to perform FFT on invalid plan. Maybe the data vector was empty?\n";
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void fftw_vector::ifft()
 {
 	if(m_pBwdPlan)
