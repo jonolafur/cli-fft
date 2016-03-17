@@ -44,8 +44,8 @@ endif()
 ## -E copy_directory is portable way of copying dirs. I use it for example in the ctest
 ## directory to place my reference data into the build tree.
 macro(COPY_DIR src_dir dest_dir)
-  exec_program("${CMAKE_COMMAND}" ARGS
-               "-E copy_directory \"${src_dir}\" \"${dest_dir}\"")
+  exec_program(${CMAKE_COMMAND} ARGS
+               -E copy_directory ${src_dir} ${dest_dir})
 endmacro(COPY_DIR)
 
 ####################################################################################
