@@ -43,11 +43,11 @@ fftw_vector& fftw_vector::operator=( const fftw_vector& rhs)
       m_x[i][0]= rhs.m_x[i][0];
       m_x[i][1]= rhs.m_x[i][1];
    }
-   
+
    m_Df = rhs.m_Df;
    m_Dt = rhs.m_Dt;
    m_idx = rhs.m_idx;
-   
+
    return *this;
 }
 
@@ -56,7 +56,8 @@ fftw_vector::~fftw_vector()
 {
    free_samples();
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void fftw_vector::re_alloc( std::size_t N, bool fftw_estimate)
 {
    std::string fftw_estimation_mode;
@@ -162,7 +163,8 @@ void fftw_vector::ifft()
    else
       throw "Attempting to perform IFFT on invalid plan. Maybe the data vector was empty?\n";
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void fftw_vector::normalizeToValue(double norm)
 {
    if(norm <= 0)
@@ -200,7 +202,8 @@ void fftw_vector::normalizeACF()
 {
    normalizeToValue( sqrt(m_x[0][0]*m_x[0][0] + m_x[0][1]*m_x[0][1]) );
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 double fftw_vector::normSquare() const
 {
    double normSquare=0.0;
@@ -210,13 +213,15 @@ double fftw_vector::normSquare() const
 
    return normSquare;
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void fftw_vector::acf_normalized(bool removeBartlettWindow)
 {
    acf_unscaled(removeBartlettWindow);
    normalizeACF();
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void fftw_vector::acf_unscaled(bool removeBartlettWindow)
 {
    // It is assumed that the vector has already been zero-padded.
@@ -227,13 +232,15 @@ void fftw_vector::acf_unscaled(bool removeBartlettWindow)
    if(removeBartlettWindow)
       removeImplicitBartlettWindow();
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void fftw_vector::acf(bool removeBartlettWindow)
 {
    acf_unscaled(removeBartlettWindow);
    normalizeToValue(size());
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void fftw_vector::removeImplicitBartlettWindow()
 {
    double N=static_cast<double>(size()/2);
@@ -247,7 +254,8 @@ void fftw_vector::removeImplicitBartlettWindow()
       m_x[size()-i][1] *= norm;
    }
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 polar fftw_vector::getPolar(int idx)
 {
    polar p(sqrt(m_x[idx][0]*m_x[idx][0]+ m_x[idx][1]*m_x[idx][1]),
@@ -255,7 +263,8 @@ polar fftw_vector::getPolar(int idx)
 
    return p;
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void fftw_vector::getSample(double& x, double& y, int idx, bool polar_coord)
 {
    if(polar_coord)
@@ -269,7 +278,8 @@ void fftw_vector::getSample(double& x, double& y, int idx, bool polar_coord)
       y = m_x[idx][1];
    }
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void fftw_vector::mult_conj(fftw_vector& p, bool conjugate_result)
 {
    if(size() != p.size())
@@ -291,7 +301,8 @@ void fftw_vector::mult_conj(fftw_vector& p, bool conjugate_result)
       m_x[i][1] = c*(p0*m_x[i][1] -p[i][1]*z0);
    }
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void fftw_vector::mult_conj(const fftw_complex& p, bool conjugate_result)
 {
    double c = 1.0;
@@ -306,7 +317,8 @@ void fftw_vector::mult_conj(const fftw_complex& p, bool conjugate_result)
    }
 
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void fftw_vector::setSampleTime(double dt)
 {
    if(dt < std::numeric_limits<double>::epsilon() )
@@ -318,7 +330,8 @@ void fftw_vector::setSampleTime(double dt)
    m_Dt = dt;
    m_Df = 1.0/( m_Dt*static_cast<double>(size()) );
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void fftw_vector::setSampleFrequency(double df)
 {
    if(df < std::numeric_limits<double>::epsilon() )
@@ -326,7 +339,8 @@ void fftw_vector::setSampleFrequency(double df)
 
    setSampleTime(1.0/df);
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void fftw_vector::fft_filter(double bw, double f_s)
 {
    if(bw==0.0)
@@ -364,7 +378,8 @@ void fftw_vector::fft_filter(double bw, double f_s)
    std::clog << "First sample index deleted: " << N << '\n'
             << "Last sample index deleted: " << m_size-N-1 << std::endl;
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void fftw_vector::free_samples()
 {
    if(m_x !=0 && m_size !=0)
@@ -372,7 +387,8 @@ void fftw_vector::free_samples()
    m_x = 0;
    m_size = 0;
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void fftw_vector::push_back(const double real, const double imag)
 {
    if(m_idx<m_size)
@@ -402,25 +418,7 @@ void fftw_vector::copy_sample(fftw_complex& z, const fftw_complex& rhs) const
    z[1] = rhs[1];
 }
 
-///////////////////////////////////////////////////////////////////////////////
-void fftw_vector::write(const std::string& file_name, bool freq)
-{
-   std::ofstream out(file_name.c_str());
-   std::string comment("# Frequency    Real    Imaginary\n");
-   double Delta=m_Df;
 
-   if(!freq)  // If the vector content is to be interpreted as time domain data
-   {
-      comment = "# Time    Real    Imaginary\n";
-      Delta=m_Dt;
-   }
-
-   out << std::setprecision(12) << comment;
-   for(std::size_t i=0; i<size(); ++i)
-      out <<  double(i)*Delta  << ' '
-          << m_x[i][0] << ' ' << m_x[i][1] << '\n';
-}
-///////////////////////////////////////////////////////////////////////////////
 void fftw_vector::set_samples(const std::vector<double>& real,
       const std::vector<double>& imag, bool fftw_estimate)
 {

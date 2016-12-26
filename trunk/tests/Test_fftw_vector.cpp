@@ -6,6 +6,31 @@
 #include <boost/random.hpp>
 #include <boost/lexical_cast.hpp>
 
+
+
+
+
+void write_fft_vector(fftw_vector& fft_vec, const std::string& file_name, bool freq )
+{
+   std::ofstream out(file_name.c_str());
+   std::string comment("# Frequency    Real    Imaginary\n");
+   double Delta=fft_vec.sampleFrequency();
+   
+   if(!freq)  // If the vector content is to be interpreted as time domain data
+   {
+      comment = "# Time    Real    Imaginary\n";
+      Delta=fft_vec.sampleTime();
+   }
+
+   out << std::setprecision(12) << comment;
+
+   for(std::size_t i=0; i<fft_vec.size(); ++i)
+      out <<  double(i)*Delta  << ' '
+      << fft_vec.real(i) << ' ' << fft_vec.imag(i) << '\n';
+
+}
+
+
 void checkSymmetryOfACF(fftw_vector& v,double tolerableError )
 {
 	if(v.size()%2!=0)
@@ -165,8 +190,6 @@ void test_acf_zero_pad(std::size_t N, double angularFrequency)
 
 	v.acf(true);
 
-//	v.write("dbg.txt");
-
 	// Check result:
 	t=0.0;
 	for( std::size_t i=0; i<N; ++i, t += dt)
@@ -266,7 +289,8 @@ void test_acf_GPS(bool zeroPad, bool removeBartlett)
 
    v.acf(removeBartlett && zeroPad);
 
-   v.write("acf_dbg.txt", false);
+//   v.write("acf_dbg.txt", false);
+   write_fft_vector(v, "acf_dbg.txt", false );
 
    // The ACF of the GPS codes has values 1023 at zero:
    if(!compare(v[0][0],1023.0, 1e-12))
@@ -306,9 +330,10 @@ void acf_random(bool zeroPad, bool removeBartlett)
 
    v.acf(removeBartlett && zeroPad);
 
-   v.write("acf_random.txt", false);
+   write_fft_vector(v, "acf_random.txt", false );
 
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////
 // Main test driver:

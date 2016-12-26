@@ -36,6 +36,7 @@
 #include "fileIO.h"
 
 using std::vector;
+using std::string;
 
 ///////////////////////////////////////////////////////////////////////////////
 // short hand for program option name space...
