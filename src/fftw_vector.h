@@ -73,7 +73,6 @@ public:
    double time(int i) const {return static_cast<double>(i)*m_Dt;}
    double sampleTime() const {return m_Dt;}
    double sampleFrequency() const {return m_Df;}
-   void write(const std::string& file_name, bool freq=true);
    polar getPolar(int idx);
    double abs(int idx) const {return sqrt(m_x[idx][0]*m_x[idx][0]+ m_x[idx][1]*m_x[idx][1]);}
    double arg(int idx) const {return atan2(m_x[idx][1],m_x[idx][0]);}

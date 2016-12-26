@@ -11,20 +11,22 @@
 // $Id:  $
 ///////////////////////////////////////////////////////////////////////////////
 //Includes: ///////////////////////////////////////////////////////////////////
+
 #include "main.h"
-///////////////////////////////////////////////////////////////////////////////
+
+
 int main(int argc, char* argv[])
 {
    const int ret_error = 1;
    const int ret_ok = 0;
 
    LogStreamHandler log_stream_handler;
-   
+
    log_stream_handler.redirect_clog_toFileInHomeDir(".fft.log");
-   
+
    int ret_val = ret_ok;
-   std::string programName("fft");
-   
+   string programName("fft");
+
    try
    {
       logHistory(argc, argv);
@@ -36,7 +38,7 @@ int main(int argc, char* argv[])
 
       if(opt.writeHelpToConsole())
          return ret_ok;
-      
+
       process(opt);
 
    }
@@ -45,7 +47,7 @@ int main(int argc, char* argv[])
       std::clog << "Error: " << e.what() << std::endl;
       ret_val = ret_error;
    }
-   catch(std::string& s)
+   catch(string& s)
    {
       std::clog << "Error: " << s << std::endl;
       ret_val = ret_error;
@@ -66,7 +68,8 @@ int main(int argc, char* argv[])
 
    return ret_val;
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void process(fftOptions& opt)
 {
    fftw_vector fft_vec;
@@ -76,14 +79,15 @@ void process(fftOptions& opt)
    processInput(opt,fft_vec);
    writeOutput(opt,fft_vec);
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void readInput(fftOptions& opt, fftw_vector& fft_vec, StreamHandler& stream_handler)
 {
    data_columns fft_data;
 
    std::vector<int> colIdx = opt.getZeroBasedColumnIndexes();
 
-   getColsFromFile(stream_handler, fft_data, colIdx, opt.getDelimiterAsString() );
+   getColsFromFile(stream_handler, fft_data, colIdx, opt.input_delimiter() );
 
    if(opt.zeroPadSamples())
       fft_data.zeroPadSamplesByFactorTwo();
@@ -105,7 +109,8 @@ void readInput(fftOptions& opt, fftw_vector& fft_vec, StreamHandler& stream_hand
    if(opt.sampleWasRateSpecified())
       fft_vec.setSampleFrequency(opt.getSampleRate());
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void processInput(fftOptions& opt, fftw_vector& fft_vec)
 {
    if(opt.acf())
@@ -180,7 +185,8 @@ void writeOutput(fftOptions& opt, fftw_vector& fft_vec)
    else
       writeStandard(fft_vec, out_stream, opt );
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 double checkSampleDelta(const std::vector<double>& t)
 {
    std::size_t N = t.size();
@@ -191,7 +197,8 @@ double checkSampleDelta(const std::vector<double>& t)
 
    return dt;
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void writeOrdered(fftw_vector& fft, std::ostream* out_stream, const fftOptions& opt)
 {
    int N = static_cast<int>(fft.size());
@@ -203,7 +210,8 @@ void writeOrdered(fftw_vector& fft, std::ostream* out_stream, const fftOptions& 
    for(int i=0; i<N/2; i++)
       writeSample(i, 0, fft,  out_stream, opt);
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void writeStandard(fftw_vector& fft, std::ostream* out_stream, const fftOptions& opt)
 {
    int N = static_cast<int>(fft.size());
@@ -213,10 +221,13 @@ void writeStandard(fftw_vector& fft, std::ostream* out_stream, const fftOptions&
    for(int i=0; i<N; i++)
       writeSample(i, 0, fft, out_stream, opt);
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void writeSample(int idx, int offset, fftw_vector& fft, std::ostream* out_stream, const fftOptions& opt)
 {
    double a,x,y;
+   
+   string delim = opt.delimiter();
 
    // If an IFFT was performed, the assumption is that the horizontal axis of
    // the _output_ (i.e. _after_ the transformation) is a time coordinate
@@ -227,9 +238,10 @@ void writeSample(int idx, int offset, fftw_vector& fft, std::ostream* out_stream
 
    fft.getSample(x, y, idx, opt.writeMagnitudeAndPhase() );
 
-   (*out_stream) << a << ' ' << x << ' ' << y << '\n';
+   (*out_stream) << a << delim << x << delim << y << '\n';
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void logHistory( int a, char* av[] )
 {
    bpt::ptime t(bpt::second_clock::local_time());

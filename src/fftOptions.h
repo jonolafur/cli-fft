@@ -10,18 +10,21 @@
 
 #include "programOptions.h"
 
+using std::string;
+using std::vector;
+
 class fftOptions : public programOptions
 {
 public:
 	fftOptions(int argc, char* argv[]);
 	virtual ~fftOptions(){};
 
-	std::vector<int> getZeroBasedColumnIndexes();
-	std::string getDelimiterAsString();
+	vector<int> getZeroBasedColumnIndexes();
 	bool isComplex() const {return var_map.count("complex")!=0;}
-	std::string inputFile();
-	std::string outputFile();
-	char delimiter(){return var_map["delimiter"].as<char>();}
+	string inputFile();
+	string outputFile();
+   string delimiter() const;
+   string input_delimiter(){return var_map["input-delimiter"].as<string>();}
    bool sampleWasRateSpecified() const {return var_map.count("sample-rate")!=0 ;}
    double getSampleRate() const {return var_map["sample-rate"].as<double>();}
 	bool xAxisSpecified() const {return x_value_Idx()!=0;}

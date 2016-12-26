@@ -24,34 +24,39 @@
 
 namespace ba = boost::algorithm;
 
+using std::vector;
+using std::string;
+
 ///////////////////////////////////////////////////////////////////////////////
 static const int maxNumberOfFailuresToLog = 100;
 
 class data_columns
 {
 public:
-	std::vector<std::vector<double> > m_data;
-	data_columns(): m_data(3){}
-	virtual ~data_columns(){}
+   vector<std::vector<double> > m_data;
+   data_columns(): m_data(3){}
+   virtual ~data_columns(){}
 
-	std::vector<double>& x_axis(){return m_data[0];}
-	std::vector<double>& realAxis(){return m_data[1];}
-	std::vector<double>& imagAxis(){return m_data[2];}
+   vector<double>& x_axis(){return m_data[0];}
+   vector<double>& realAxis(){return m_data[1];}
+   vector<double>& imagAxis(){return m_data[2];}
 
-	std::size_t size(){return m_data.size();}
-	std::size_t max_size();
-	bool checkEqualNonZeroColumnLength();
-	void zeroPadSamplesByFactorTwo();
+   std::size_t size(){return m_data.size();}
+   std::size_t max_size();
+   bool checkEqualNonZeroColumnLength();
+   void zeroPadSamplesByFactorTwo();
 };
 
 void getColsFromFile(StreamHandler& stream_handler,
-		data_columns& columns, const std::vector<int>& columnIdx,
-		std::string delimiter);
+                     data_columns& columns, const vector<int>& columnIdx,
+                     string delimiter);
 
-void tokenize(std::vector<std::string>& result, const std::string& inputLine,
-              const std::string& delimiter);
+void tokenize(vector<string>& result, const string& inputLine,
+              const string& delimiter);
 
 #endif /* FILEIO_H_ */
+
+
 
 
 

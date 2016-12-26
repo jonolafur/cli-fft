@@ -7,22 +7,30 @@
 
 #include "fftOptions.h"
 
-///////////////////////////////////////////////////////////////////////////////
+
+
 fftOptions::fftOptions(int argc, char* argv[]) :  programOptions()
 {
    addfftOptions();
    loadOptionsFromCommandLine(argc, argv);
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 void fftOptions::addfftOptions()
 {
    // declare all options:
    desc.add_options()
-   ("input-file,i", po::value<std::string>(),
+   ("input-file,i", po::value<string>(),
          "Name of input file. If nothing is specified, the standard input will be used.")
-   ("output-file,o", po::value<std::string>(),
+   ("output-file,o", po::value<string>(),
          "Name of output file. If nothing is specified, the standard output will be used.")
-   ("delimiter,d", po::value<char>()->default_value(' '), "Delimiter for data fields.")
+   ("delimiter,d", po::value<string>()->default_value( string(" ") ),
+         "Delimiter string to be used for data fields in the output file. "
+         "Please note that the a tabulator can be specified as \"tab\" or as \"\\t\".")
+   ("input-delimiter,D", po::value<string>()->default_value( string(" ") ),
+        "Delimiter assumed for the input data. Please note that if the data is separated by white space "
+        "(tab or a varaible number of spaces), then leave this option empty. If you specify more than "
+        "one character (e.g. \";,\") then either of those will be treated as a delimiter.")
    ("estimate-fftw,e","Only perform an estimate of the optimal fft algorithm. "
          "This tells fftw to generate plans using the FFTW_ESTIMATE flag.")
    ("ordered-x-axis,O","The natural output of the fft is to have the positive frequencies "
@@ -34,7 +42,7 @@ void fftOptions::addfftOptions()
    ("magnitude-phase,M","Output format: Writes the magnitude and phase to the output, "
          "rather than real and imaginary components.")
    ("inverse,I", "Perform an inverse fft rather than a forward FFT.")
-   ("auto-correlate,A", po::value<std::string>(), "Perform an auto-correlation of the samples. The operation basically does IFFT(FFT*conj(FFT)).\n"
+   ("auto-correlate,A", po::value<string>(), "Perform an auto-correlation of the samples. The operation basically does IFFT(FFT*conj(FFT)).\n"
          "To have more control over what\'s happening you must specify one of the following:\n"
          "\'c\' \tor \'cyclic\': Do a simple cyclic auto correlation.\n"
          "\'l\' \tor \'linear\': Do a simple linear auto correlation. This is done by zero padding the signal "
@@ -58,6 +66,8 @@ void fftOptions::addfftOptions()
          "identical result is obtained")
    ("batches,B",po::value<size_t>()->default_value(1),"Number of batches to divide the sample set.");
 }
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // This function returns a zero-based vector of indexes of the data columns of
 // the data file provided by the user. The dimension is always 3 invalid
@@ -81,29 +91,41 @@ std::vector<int> fftOptions::getZeroBasedColumnIndexes()
 
    return colIdx;
 }
-///////////////////////////////////////////////////////////////////////////////
-// Simply returns the delimiter as an std::string type.
-std::string fftOptions::getDelimiterAsString()
+
+
+string fftOptions::delimiter() const
 {
-   return std::string(1,var_map["delimiter"].as<char>());
+   string d = var_map["delimiter"].as<string>();
+   string escaped_tab("\\t");
+
+   if(d.find( escaped_tab ) != string::npos ||
+      d.find( "tab" )       != string::npos )
+   {
+      return string("\t");
+   }
+
+   return d;
 }
-///////////////////////////////////////////////////////////////////////////////
-std::string fftOptions::inputFile()
+
+
+string fftOptions::inputFile()
 {
    if(var_map.count("input-file") ==0)
-      return std::string();
+      return string();
 
-   return var_map["input-file"].as<std::string>();
+   return var_map["input-file"].as<string>();
 }
-///////////////////////////////////////////////////////////////////////////////
-std::string fftOptions::outputFile()
+
+
+string fftOptions::outputFile()
 {
    if(var_map.count("output-file") ==0)
-      return std::string();
+      return string();
 
-   return var_map["output-file"].as<std::string>();
+   return var_map["output-file"].as<string>();
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 bool fftOptions::cyclicAcf() const
 {
    if(var_map.count("auto-correlate")==0)
@@ -112,7 +134,8 @@ bool fftOptions::cyclicAcf() const
    return ( var_map["auto-correlate"].as<std::string>() == "c" ||
             var_map["auto-correlate"].as<std::string>() == "cyclic" );
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 bool fftOptions::zeroPadSamples() const
 {
    if(var_map.count("auto-correlate")==0)
@@ -120,20 +143,22 @@ bool fftOptions::zeroPadSamples() const
 
    // The linear auto correlation requires zero padding. There are two types of
    // linear ACF: with and without removal of the implicit Bartlett window.
-   return ( var_map["auto-correlate"].as<std::string>() == "l" ||
-         var_map["auto-correlate"].as<std::string>() == "linear" ||
-         var_map["auto-correlate"].as<std::string>() == "b" ||
-         var_map["auto-correlate"].as<std::string>() == "no-bartlett" );
+   return ( var_map["auto-correlate"].as<string>() == "l" ||
+         var_map["auto-correlate"].as<string>() == "linear" ||
+         var_map["auto-correlate"].as<string>() == "b" ||
+         var_map["auto-correlate"].as<string>() == "no-bartlett" );
 }
-///////////////////////////////////////////////////////////////////////////////
+
+
 bool fftOptions::removeBartlett() const
 {
    if(var_map.count("auto-correlate")==0)
       return false;
 
-   return ( var_map["auto-correlate"].as<std::string>() == "b" ||
-            var_map["auto-correlate"].as<std::string>() == "no-bartlett" );
+   return ( var_map["auto-correlate"].as<string>() == "b" ||
+            var_map["auto-correlate"].as<string>() == "no-bartlett" );
 }
+
 
 size_t fftOptions::getNumBatches() const
 {
