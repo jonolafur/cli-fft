@@ -10,7 +10,7 @@ set(CMAKE_VERBOSE_MAKEFILE OFF)
 set(BUILD_UTILS "build_utils")
 
 if(CMAKE_COMPILER_IS_GNUCXX)
-  set( GCC_CXX_BASIC_BUILD_OPTIONS " -std=c++11 ")
+  set( GCC_CXX_BASIC_BUILD_OPTIONS " -std=c++11 -static ")
   set( GCC_WARN_OPTIONS " -Wall -Wextra -pedantic -Weffc++ -Wold-style-cast -Woverloaded-virtual -Wno-pmf-conversions -Wsign-promo ")
 
   set( CMAKE_CXX_FLAGS_DEBUG "-O0 -ggdb3 ${GCC_CXX_BASIC_BUILD_OPTIONS} ${GCC_WARN_OPTIONS}" )
