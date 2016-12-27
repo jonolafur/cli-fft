@@ -61,6 +61,14 @@ endmacro(COPY_DIR)
 
 find_package( Boost COMPONENTS program_options REQUIRED)
 
+
+if (WIN32)
+  # Seems to be required. cmake lib finding and boost autolink under windows
+  # do not seem to play well together...
+  link_directories( ${Boost_LIBRARY_DIRS} )
+endif(WIN32)
+
+
 message(STATUS "Include boost:  ${BOOST_INCLUDEDIR}" )
 message(STATUS "Will link to Boost: ${Boost_LIBRARIES}" )
 message(STATUS "Will include boost libs from here: ${Boost_LIBRARY_DIRS}" )
@@ -88,6 +96,7 @@ find_path( INCLUDE_FFTW fftw3.h
            /usr/local/include
            /usr/include
            /include
+           c:/fftw-3
            c:/fftw3
            c:/fftw )
 
@@ -103,6 +112,7 @@ find_library( LIB_FFTW
                     /lib
                     /usr/local/lib
                     c:/fftw3
+                    c:/fftw-3
                     c:/fftw )
 
 message(STATUS "Will link against FFTW3 library found in: ${LIB_FFTW}" )
@@ -121,14 +131,16 @@ include_directories ( ${VER_DES}
 
 message(STATUS "Calling SVN version tool from: ${CMAKE_CURRENT_SOURCE_DIR}")
 
-if(CMAKE_SYSTEM_NAME EQUAL "Windows")
-add_custom_command( OUTPUT ${VER_DES}/version.h
-                    COMMAND SubWCRev.exe ${CMAKE_CURRENT_SOURCE_DIR} ${VER_TMPL}/version.h.tmpl
-                            ${VER_DES}/version.h )
-else(CMAKE_SYSTEM_NAME EQUAL "Windows")
-add_custom_command( OUTPUT ${VER_DES}/version.h
+if(WIN32)
+   add_custom_command( OUTPUT ${VER_DES}/version.h
+                       COMMAND SubWCRev.exe ${CMAKE_CURRENT_SOURCE_DIR} ${VER_TMPL}/version.h.tmpl
+                               ${VER_DES}/version.h )
+   message(STATUS "## Windows detected" )				
+else(WIN32)
+   add_custom_command( OUTPUT ${VER_DES}/version.h
                     COMMAND ${VER_SCRT}/version.sh ${CMAKE_CURRENT_SOURCE_DIR} ${VER_TMPL} ${VER_DES}  )
-endif(CMAKE_SYSTEM_NAME EQUAL "Windows")
+   message(STATUS "## Linux detected" )				
+endif(WIN32)
 
 
 add_executable (${BIN_NAME}
