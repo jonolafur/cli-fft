@@ -1,0 +1,321 @@
+------------------------------------------------------------------------
+r68 | jonolafur | 2016-12-27 13:41:02 +0100 (Tue, 27 Dec 2016) | 3 lines
+
+Correcting errors in CMakeLists.txt. The windows platform was not detected correctly.
+Added search paths for fftw
+Manually inserted the library path to boost. Now it is not required to add that manually in the MSVC project files.
+------------------------------------------------------------------------
+r67 | jonolafur | 2016-12-26 23:04:27 +0100 (Mon, 26 Dec 2016) | 1 line
+
+Fixed delimiter issue: The delimiters for input and output streams are specified separately. The old option -d now explicitly refers to the output. A new option -D has been created to specify the delimiter to expect in the input file. For example if an input file has columns in it separated by ",", but the user wants the output to be separated by tabulator, this is now handeled as expected.
+------------------------------------------------------------------------
+r66 | jonolafur | 2016-03-17 22:27:40 +0100 (Thu, 17 Mar 2016) | 1 line
+
+Cleaning up some code. Correcting error in the batch processing. Added normalization to output of batch processing (Currently the fft is normalized to power of unity). Anoying message about errors reported in log file corrected. Now it should only appear when there is really an error.
+------------------------------------------------------------------------
+r65 | jonolafur | 2016-03-17 15:18:42 +0100 (Thu, 17 Mar 2016) | 1 line
+
+Corrected batch processing. Now using many small ffts and accumulating magnitude
+------------------------------------------------------------------------
+r64 | jonolafur | 2016-03-11 17:15:16 +0100 (Fri, 11 Mar 2016) | 1 line
+
+Adding batch processing
+------------------------------------------------------------------------
+r63 | jonolafur | 2015-01-05 20:53:13 +0100 (Mon, 05 Jan 2015) | 1 line
+
+Simplifying the build process...
+------------------------------------------------------------------------
+r62 | jonolafur | 2013-10-03 22:43:56 +0200 (Thu, 03 Oct 2013) | 3 lines
+
+Adding tests for ACF.
+Added sample rate option
+
+------------------------------------------------------------------------
+r61 | jonolafur | 2013-09-22 17:10:34 +0200 (Sun, 22 Sep 2013) | 2 lines
+
+Adding better path handling in build_native.bash script.
+
+------------------------------------------------------------------------
+r60 | jonolafur | 2013-09-11 23:17:24 +0200 (Wed, 11 Sep 2013) | 1 line
+
+Adding script to build native binaries
+------------------------------------------------------------------------
+r59 | jonolafur | 2013-08-08 23:29:17 +0200 (Thu, 08 Aug 2013) | 3 lines
+
+Finding home dir on Windows didn't work well. Need to use HOMEPATH and
+HOMEDRIVE instead of HOME in the Linux case. Brief test under Win XP seems to work
+Still need to try Win 7...
+------------------------------------------------------------------------
+r58 | jonolafur | 2013-08-04 23:02:52 +0200 (Sun, 04 Aug 2013) | 1 line
+
+Now works with 32 and 64 bit Win targets. Call pull_third_party with "32" or "64"
+------------------------------------------------------------------------
+r57 | jonolafur | 2013-08-01 23:59:37 +0200 (Thu, 01 Aug 2013) | 1 line
+
+Making sure both debug and release are static builds
+------------------------------------------------------------------------
+r56 | jonolafur | 2013-07-31 23:28:28 +0200 (Wed, 31 Jul 2013) | 1 line
+
+Pullin now works for w64 targets. Still need to streamline...
+------------------------------------------------------------------------
+r55 | jonolafur | 2013-07-25 23:53:26 +0200 (Thu, 25 Jul 2013) | 1 line
+
+usleep and unsetenv were not guarded right (compiler directives)
+------------------------------------------------------------------------
+r54 | jonolafur | 2013-07-25 00:14:23 +0200 (Thu, 25 Jul 2013) | 1 line
+
+pull_in_third_party now seems to work. Still trying to get it to work for all targets (Win32, win64, Lin32 and Lin 64)
+------------------------------------------------------------------------
+r53 | jonolafur | 2013-05-17 01:16:50 +0200 (Fri, 17 May 2013) | 1 line
+
+
+------------------------------------------------------------------------
+r52 | jonolafur | 2013-04-21 20:21:39 +0200 (Sun, 21 Apr 2013) | 1 line
+
+Added another test to logStreamHandler
+------------------------------------------------------------------------
+r51 | jonolafur | 2013-04-19 13:50:44 +0200 (Fri, 19 Apr 2013) | 5 lines
+
+First use of nullptr! Need to add -std=c++11 to compile options of gcc (4.7)
+Using LogStreamHandler made more transparent: User needs to explicitly call
+LogStreamHandler::redirect_clog_toFileInHomeDir(...) in order for clog to
+be re-directed to file.
+Added a test to test LogStreamHandler
+------------------------------------------------------------------------
+r50 | jonolafur | 2013-04-17 17:35:59 +0200 (Wed, 17 Apr 2013) | 1 line
+
+Cleaning up logging mechanism. Does not compile, work in progress
+------------------------------------------------------------------------
+r49 | jonolafur | 2013-04-16 23:40:44 +0200 (Tue, 16 Apr 2013) | 1 line
+
+EXtracting process
+------------------------------------------------------------------------
+r48 | jonolafur | 2013-04-16 15:44:23 +0200 (Tue, 16 Apr 2013) | 1 line
+
+StreamHandler now weeds out the comments. Tests pass.
+------------------------------------------------------------------------
+r47 | jonolafur | 2013-04-16 14:11:08 +0200 (Tue, 16 Apr 2013) | 1 line
+
+Adding eclips project settings
+------------------------------------------------------------------------
+r46 | jonolafur | 2013-04-16 14:06:47 +0200 (Tue, 16 Apr 2013) | 2 lines
+
+Project compiles now and all (except for one) unit tests pass. The one not passing is still under construction...
+File IO should now be handled with the new StreamHandler object
+------------------------------------------------------------------------
+r45 | jonolafur | 2013-04-16 13:16:17 +0200 (Tue, 16 Apr 2013) | 1 line
+
+Comminted local changes to pull_third... from work
+------------------------------------------------------------------------
+r44 | jonolafur | 2013-04-14 21:34:09 +0200 (Sun, 14 Apr 2013) | 1 line
+
+Adding special handler classes for file IO
+------------------------------------------------------------------------
+r43 | jonolafur | 2012-12-31 00:22:56 +0100 (Mon, 31 Dec 2012) | 3 lines
+
+Added  initial version of a script that pulls in the mingw-w64 tool chain, boost and fftw from the Internet. The tool-chain is set up for boost, fftw and cmake so that every thing gets built in one go. This should save a lot of time when generating binaries for upload.
+Currently, this only works for mingw32-w64 (i.e. the 32 bit build). However, extending to mingw64-w64 should not be so difficult.
+Note that this only works under linux. The goal is to build for all targets (win32, win64, linux32 and linux64) by calling one script under linux.
+------------------------------------------------------------------------
+r42 | jonolafur | 2012-11-07 00:27:11 +0100 (Wed, 07 Nov 2012) | 2 lines
+
+Added code file GPS as a reference for acf tests.
+Added a normalized verison of fftw_vec::acf.
+------------------------------------------------------------------------
+r41 | jonolafur | 2012-10-01 22:41:59 +0200 (Mon, 01 Oct 2012) | 4 lines
+
+Added some comments to the code.
+Changed the normalization functions for fftw_vector.
+Added a test for the normalization of the fftw vector. 
+Adding normalization to ACF results.
+------------------------------------------------------------------------
+r40 | jonolafur | 2012-07-14 10:58:38 +0200 (Sat, 14 Jul 2012) | 1 line
+
+Work in progress. Test are not complete or wrong...
+------------------------------------------------------------------------
+r39 | jonolafur | 2012-07-13 21:14:08 +0200 (Fri, 13 Jul 2012) | 2 lines
+
+Adding comment to std::cout that an error has occurred.
+Split the redirect_clog into two functions: redirect_clog and makeLogfileName 
+------------------------------------------------------------------------
+r38 | jonolafur | 2012-06-13 22:07:23 +0200 (Wed, 13 Jun 2012) | 3 lines
+
+Added a limit to the number of bad field reported during file read.
+See ticket#4
+
+------------------------------------------------------------------------
+r37 | jonolafur | 2012-04-13 00:11:33 +0200 (Fri, 13 Apr 2012) | 1 line
+
+Adding win32 bins
+------------------------------------------------------------------------
+r36 | jonolafur | 2012-04-13 00:07:33 +0200 (Fri, 13 Apr 2012) | 1 line
+
+Adding 64 bit linux bins
+------------------------------------------------------------------------
+r35 | jonolafur | 2012-04-13 00:03:32 +0200 (Fri, 13 Apr 2012) | 1 line
+
+Adding linux 32 bit bins
+------------------------------------------------------------------------
+r34 | jonolafur | 2012-04-12 23:40:16 +0200 (Thu, 12 Apr 2012) | 1 line
+
+
+------------------------------------------------------------------------
+r33 | jonolafur | 2012-04-12 23:24:36 +0200 (Thu, 12 Apr 2012) | 1 line
+
+Just adding and correction info files (readme  and changes)
+------------------------------------------------------------------------
+r32 | jonolafur | 2012-04-12 22:57:34 +0200 (Thu, 12 Apr 2012) | 2 lines
+
+Added option for turning off fftw_measure (ffw_estimate) (see [#3]).
+Changed some of the unit tests to use the new estimate switch.
+------------------------------------------------------------------------
+r31 | jonolafur | 2012-04-11 14:32:19 +0200 (Wed, 11 Apr 2012) | 1 line
+
+When non-white characters are used as delimiter, there was a problem with trimming white spaces. Fixed.
+------------------------------------------------------------------------
+r30 | jonolafur | 2012-04-06 23:10:06 +0200 (Fri, 06 Apr 2012) | 1 line
+
+Added options for acf.
+------------------------------------------------------------------------
+r29 | jonolafur | 2012-04-06 17:43:50 +0200 (Fri, 06 Apr 2012) | 2 lines
+
+Corrected error in Bartlett window removal in fftw_vector
+Updated fftw_vector acf tests
+------------------------------------------------------------------------
+r28 | jonolafur | 2012-04-06 16:36:20 +0200 (Fri, 06 Apr 2012) | 1 line
+
+Adding unit tests to further check file IO
+------------------------------------------------------------------------
+r27 | jonolafur | 2012-04-06 15:20:36 +0200 (Fri, 06 Apr 2012) | 3 lines
+
+Added support for acf, cyclic and linear. Changed the file read logic by adding a class data _columns.
+The index of the real and imaginary time series is now always the same. That makes the selection logic simpler.
+ 
+------------------------------------------------------------------------
+r26 | jonolafur | 2012-04-01 12:25:11 +0200 (Sun, 01 Apr 2012) | 1 line
+
+In the process of adding acf support. Want to support cyclic as well as linear acfs. Still work in progress
+------------------------------------------------------------------------
+r25 | jonolafur | 2012-04-01 09:44:21 +0200 (Sun, 01 Apr 2012) | 1 line
+
+Adding unit tests to fftw vector
+------------------------------------------------------------------------
+r24 | jonolafur | 2012-04-01 09:38:28 +0200 (Sun, 01 Apr 2012) | 1 line
+
+Adding options for auto correlation using fft
+------------------------------------------------------------------------
+r23 | jonolafur | 2012-03-31 18:18:04 +0200 (Sat, 31 Mar 2012) | 1 line
+
+Adding 64 bit release of Linux
+------------------------------------------------------------------------
+r22 | jonolafur | 2012-03-31 17:50:21 +0200 (Sat, 31 Mar 2012) | 1 line
+
+Adding Linux 32 bit binaries to release tree
+------------------------------------------------------------------------
+r21 | jonolafur | 2012-03-31 17:40:44 +0200 (Sat, 31 Mar 2012) | 1 line
+
+Adding directory structure to keep track of binary releases
+------------------------------------------------------------------------
+r20 | jonolafur | 2012-03-30 07:43:49 +0200 (Fri, 30 Mar 2012) | 1 line
+
+Updating the CMake files such that fft can be built with minwg
+------------------------------------------------------------------------
+r19 | jonolafur | 2012-03-25 18:27:07 +0200 (Sun, 25 Mar 2012) | 2 lines
+
+Completely re-factored all member variables out of fftOptions. These are contained in variable map in boost::program_options.
+All unit tests still pass. 
+------------------------------------------------------------------------
+r18 | jonolafur | 2011-12-05 23:31:01 +0100 (Mon, 05 Dec 2011) | 1 line
+
+Cleaning up help info in command line
+------------------------------------------------------------------------
+r17 | jonolafur | 2011-12-05 23:22:53 +0100 (Mon, 05 Dec 2011) | 1 line
+
+Adding a change log
+------------------------------------------------------------------------
+r16 | jonolafur | 2011-12-05 17:25:47 +0100 (Mon, 05 Dec 2011) | 1 line
+
+Adding usr/local paths to CMakeList for finding user-compiled versions of fftw 
+------------------------------------------------------------------------
+r15 | jonolafur | 2011-12-04 23:02:35 +0100 (Sun, 04 Dec 2011) | 3 lines
+
+Ran into some problems with reading and writing wisdom files of fftw. Switched to new interface: fftw 3.3. This is a relatively new interface provided in fftw 3.3. Earlier versions of fftw (such as the ones now being shipped with Ubuntu 11.10) do not contain this. Thus, make sure you get the right fftw version and compile and install it before building.
+The command line is now written to the log file at the beginning.
+Still have some problems with the python test scripts and the paths in cmake (in particular CMAKE_BINARY_DIR).
+------------------------------------------------------------------------
+r14 | jonolafur | 2011-12-02 17:02:25 +0100 (Fri, 02 Dec 2011) | 1 line
+
+Working on getting cmake to behave under win and linux...
+------------------------------------------------------------------------
+r13 | jonolafur | 2011-12-02 13:16:01 +0100 (Fri, 02 Dec 2011) | 1 line
+
+Adding a python script for calling fft with re-direction (cmake appears not to support that). Python so that we can call this under windows as well. 
+------------------------------------------------------------------------
+r12 | jonolafur | 2011-12-01 17:21:12 +0100 (Thu, 01 Dec 2011) | 4 lines
+
+In redirect_clog(...) fft crashed if getenv fails (returns NULL). This is checked now
+Massaging CMakeList into windows compatibility.
+Added a wrapper around platform dependent sleep (different on Linux and Windows).
+Now the sleeping is done with millisecond granularity (rather than usleep's microsecond resolution, which was probably not very strictly adhered to anyway...)
+------------------------------------------------------------------------
+r11 | jonolafur | 2011-11-30 22:57:14 +0100 (Wed, 30 Nov 2011) | 3 lines
+
+Added test to compare the results before and after and FFT-IFFT cycle (should be the same)
+Added a function to handle the scaling of the horizontal axis of the result.
+Corrected error in fftOptions. Now the standard constructor is gone. A new constructor that takes argv arguments and immediately parses the command line. 
+------------------------------------------------------------------------
+r10 | jonolafur | 2011-11-30 17:31:35 +0100 (Wed, 30 Nov 2011) | 9 lines
+
+Major rewrite of various things.
+Added new option: normalized
+Added some functions to fftOptions for more efficiency.
+Throw exception when file open fails
+Writing to output under major re-construction
+Corrected paths in Test_fft_inverse
+Added normalization to Test_std_in_out.bash
+Generator now optionally accepts an argument
+
+------------------------------------------------------------------------
+r9 | jonolafur | 2011-11-30 00:22:34 +0100 (Wed, 30 Nov 2011) | 1 line
+
+Corrected the clog re-direction. Still not happy about things... The last test seg faults!
+------------------------------------------------------------------------
+r8 | jonolafur | 2011-11-29 17:48:05 +0100 (Tue, 29 Nov 2011) | 1 line
+
+Working status! The function redirtect_clog will not work (local instance of the log file). Will correct this evening. Just need to commit the source now...
+------------------------------------------------------------------------
+r7 | jonolafur | 2011-11-28 22:59:23 +0100 (Mon, 28 Nov 2011) | 5 lines
+
+Still have problems with static linking... This seems to be some issue related to cmake. It seems to work now under Oneiric.
+Corrected a bug in the fft options: -o was used twice. Now -O is used for the --ordered option.
+Changed the name of an output file.
+Added a new test for IFFT. It still fails, but it seems to be related to the format of the output file when
+output is generated via std out. The user feed-back from the fftw allocation ends up in the output.
+------------------------------------------------------------------------
+r6 | jonolafur | 2011-11-25 23:09:44 +0100 (Fri, 25 Nov 2011) | 3 lines
+
+Replacing boost tokenizer with boost::algorithm::split for tokenizing strings
+Updated Test_get_field to reflect more realistic tokens (decimal point scientific notation)
+Reduced number of points in plot.plt
+------------------------------------------------------------------------
+r5 | jonolafur | 2011-11-25 07:21:55 +0100 (Fri, 25 Nov 2011) | 1 line
+
+Correcting CMakeLists.txt. There was (and still is) and issue regarding the static build settings. Now things should build correctly under Oneiric
+------------------------------------------------------------------------
+r4 | jonolafur | 2011-11-06 16:20:41 +0100 (Sun, 06 Nov 2011) | 2 lines
+
+Added a small demo that generates a sine wave embedded in noise. This  can then be pumped into fft (via re-direction) and displayed in gnuplot. There is also a small gnuplot file that does that. Effectively we have then a real-time spectrum of the ASCII file being written.
+Added option -M to format the output tp magnitude and argument (rater than real and imaginary)
+------------------------------------------------------------------------
+r3 | jonolafur | 2011-11-05 18:15:21 +0100 (Sat, 05 Nov 2011) | 1 line
+
+adding readme
+------------------------------------------------------------------------
+r2 | jonolafur | 2011-11-05 08:52:03 +0100 (Sat, 05 Nov 2011) | 1 line
+
+Adding the sources
+------------------------------------------------------------------------
+r1 | allura | 2011-11-04 21:14:03 +0100 (Fri, 04 Nov 2011) | 1 line
+
+Initial commit
+------------------------------------------------------------------------
