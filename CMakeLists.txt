@@ -38,7 +38,7 @@ if(MSVC)
 	ADD_DEFINITIONS (/D _CRT_SECURE_NO_WARNINGS /D _SCL_SECURE_NO_WARNINGS)
 endif()
 
-####################################################################################
+###################################################################################
 ### Definition of a macros #########################################################
 ## This macro executes cmake (referred to by ${CMAKE_COMMAND}). The option
 ## -E copy_directory is portable way of copying dirs. I use it for example in the ctest
