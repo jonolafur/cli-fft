@@ -39,7 +39,13 @@ public:
 	bool writeMagnitudeAndPhase() const {return var_map.count("magnitude-phase") !=0;}
 	bool inverseFFT() const {return var_map.count("inverse") !=0;}
 	size_t getNumBatches() const;
-
+   bool averageMagnitude() const;
+   bool averagePower() const;
+   bool averageLinear() const;
+   bool useBartlett() const;
+   bool useRectangular() const;
+   bool useHann() const;
+   double welchOverlap(size_t batch_size) const;
 
 protected:
 	void addfftOptions();

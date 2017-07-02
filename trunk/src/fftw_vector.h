@@ -74,6 +74,7 @@ public:
    double sampleTime() const {return m_Dt;}
    double sampleFrequency() const {return m_Df;}
    polar getPolar(int idx);
+   double power(int idx) const {return m_x[idx][0]*m_x[idx][0]+ m_x[idx][1]*m_x[idx][1];}
    double abs(int idx) const {return sqrt(m_x[idx][0]*m_x[idx][0]+ m_x[idx][1]*m_x[idx][1]);}
    double arg(int idx) const {return atan2(m_x[idx][1],m_x[idx][0]);}
    double real(int idx) const {return m_x[idx][0];}
