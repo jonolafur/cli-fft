@@ -161,6 +161,8 @@ add_executable (${BIN_NAME}
    src/fftw_utils.h
    src/fftw_vector.h
    src/fftw_vector.cpp
+   src/window_function.h
+   src/window_function.cpp
    ${VER_DES}/version.h)
 
 # For the details on the names of the variables involving the

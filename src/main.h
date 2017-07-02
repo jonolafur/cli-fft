@@ -34,6 +34,7 @@
 #include "fftw_vector.h"
 #include "fftOptions.h"
 #include "fileIO.h"
+#include "window_function.h"
 
 using std::vector;
 using std::string;
@@ -47,6 +48,7 @@ namespace bpt = boost::posix_time;
 void process(fftOptions& opt);
 void readInput(fftOptions& opt, fftw_vector& fft_vec, StreamHandler& stream_handler);
 void processInput(fftOptions& opt, fftw_vector& fft_vec);
+void spectralAveraging( fftOptions& opt, fftw_vector& fft_vec );
 void writeOutput(fftOptions& opt, fftw_vector& fft_vec);
 double checkSampleDelta(const std::vector<double>& t);
 void writeOrdered(fftw_vector& fft, std::ostream* out_stream,
@@ -55,6 +57,8 @@ void writeStandard(fftw_vector& fft, std::ostream* out_stream,
                    const fftOptions& opt);
 void writeSample(int idx, int offset, fftw_vector& fft, std::ostream* out_stream, const fftOptions& opt);
 void logHistory( int a, char* av[] );
+void applyWindow(fftOptions& opt, fftw_vector& fft_vec);
+
 
 #endif //_RX_MAIN_H
 

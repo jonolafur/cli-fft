@@ -64,7 +64,21 @@ void fftOptions::addfftOptions()
          "is the number of samples. With this option the transformed result (FFT or IFFT) "
          "is normalized by sqrt(N), thus ensuring that after an FFT-IFFT cycle the "
          "identical result is obtained")
-   ("batches,B",po::value<size_t>()->default_value(1),"Number of batches to divide the sample set.");
+   ("batches,B",po::value<size_t>()->default_value(1),"Number of batches to divide the sample set.")
+   ("welch,w",po::value<double>()->default_value(0.0),
+         "Welch\'s method. When averaging batches, this option specifies the overlap of the "
+         "batches in percent.")
+   ("average-mode,m",po::value<int>()->default_value(1),
+         "Average the magnitude of the spectrum of each batch (see option \"batches\".):\n"
+         "   \'1\': Power: the square of the magnitude of each batch is averaged.\n"
+         "   \'2\': Magnitude: the magnitude of each batch is averaged.\n"
+         "   \'3\': Linear: The results of each batch is simply averaged.\n")
+   ("window,W",po::value<int>()->default_value(1),
+         "Window function to be applied. Note that this window type is also applied to "
+         "each of the batches, when averaging batches:\n"
+         "   \'1\': Rectangular window.\n"
+         "   \'2\': Bartlett window.\n"
+         "   \'3\': Hann window.\n" );
 }
 
 
@@ -166,7 +180,56 @@ size_t fftOptions::getNumBatches() const
 }
 
 
+bool fftOptions::averageMagnitude() const
+{
+   return (var_map["average-mode"].as<int>() == 2);
+}
 
+bool fftOptions::averagePower() const
+{
+   return (var_map["average-mode"].as<int>() == 1);
+}
+
+
+bool fftOptions::averageLinear() const
+{
+   return (var_map["average-mode"].as<int>() == 3);
+}
+
+
+bool fftOptions::useBartlett() const
+{
+   return (var_map["window"].as<int>() == 2);
+}
+
+
+bool fftOptions::useRectangular() const
+{
+   return (var_map["window"].as<int>() == 1);
+}
+
+
+bool fftOptions::useHann() const
+{
+   return (var_map["window"].as<int>() == 3);
+}
+
+double fftOptions::welchOverlap(size_t batch_size) const
+{
+   double overlap = var_map["welch"].as<double>()/100.0;
+   
+   if(overlap >= 100.0 || overlap < 0.0)
+      throw "Invalid overlap (welch option). The overlap is specified "
+      "in percent. must be between 0 and 100.";
+
+   size_t n = batch_size*overlap;
+
+   if(n >= batch_size)
+      throw "Specified overlap in the welch option results in 100% "
+            "overlap due to rounding. PLease specify a smaller overlap.";
+
+   return overlap;
+}
 
 
 
