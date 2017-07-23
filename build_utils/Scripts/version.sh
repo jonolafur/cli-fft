@@ -6,10 +6,12 @@
 # $3: Destination of the ${VER_FILE}
 
 VER_FILE=version.h
-VERS=`svnversion $1`
+VERS=`git -C $1 describe --all --long --dirty`
 BUILD_DATE=`date`
 
-sed -e s/'\$WCRANGE\$\$WCMODS?M:\$'/"$VERS"/g \
-    -e s/'\$WCNOW\$'/"$BUILD_DATE"/g $2/version.h.tmpl > $3/${VER_FILE} 
+#sed -e s/'\$GIT_DESCRIBE\$'/"$VERS"/g \
+#    -e s/'\$WCNOW\$'/"$BUILD_DATE"/g $2/version.h.tmpl > $3/${VER_FILE} 
+
+sed -e s/'\$GIT_DESCRIBE\$'/'$VERS'/g $2/version.h.tmpl > $3/${VER_FILE}
 
 

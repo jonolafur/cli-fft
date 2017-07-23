@@ -59,7 +59,7 @@ add_custom_command( OUTPUT ${VER_DES}/version.h
                             ${VER_DES}/version.h )
 else(CMAKE_SYSTEM_NAME EQUAL "Windows")
 add_custom_command( OUTPUT ${VER_DES}/version.h
-                    COMMAND ${VER_SCRT}/version.sh ${CMAKE_CURRENT_SOURCE_DIR} ${VER_TMPL} ${VER_DES}  )
+                    COMMAND ${VER_SCRT}/version.py ${CMAKE_CURRENT_SOURCE_DIR} ${VER_TMPL} ${VER_DES}  )
 endif(CMAKE_SYSTEM_NAME EQUAL "Windows")
 
 ###########################################################################

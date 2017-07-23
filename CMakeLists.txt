@@ -55,10 +55,6 @@ endmacro(COPY_DIR)
 # Note that this didn't seem to quite work on frigg as during make the
 # gcc tried to include the boost headers from /usr/include.
 
-#set( BOOST_ROOT "C:/boost/" )
-#set( BOOST_INCLUDEDIR "~/bin/boost/" )
-#set( BOOST_LIBRARYDIR "C:/boost/lib" )
-
 find_package( Boost COMPONENTS program_options REQUIRED)
 
 
@@ -117,8 +113,6 @@ find_library( LIB_FFTW
 
 message(STATUS "Will link against FFTW3 library found in: ${LIB_FFTW}" )
 
-find_package( PythonInterp )
-
 ####################################################################################
 ### Adding sources #################################################################
 set( VER_DES ${CMAKE_CURRENT_BINARY_DIR} )
@@ -127,19 +121,19 @@ set( INST_DIR ~/bin )
 
 include_directories ( ${VER_DES}
                       ${INCLUDE_FFTW}
-					  ${Boost_INCLUDE_DIR} )
+                      ${Boost_INCLUDE_DIR} )
 
-message(STATUS "Calling SVN version tool from: ${CMAKE_CURRENT_SOURCE_DIR}")
+message(STATUS "Calling git from: ${CMAKE_CURRENT_SOURCE_DIR}")
 
 if(WIN32)
    add_custom_command( OUTPUT ${VER_DES}/version.h
                        COMMAND SubWCRev.exe ${CMAKE_CURRENT_SOURCE_DIR} ${VER_TMPL}/version.h.tmpl
                                ${VER_DES}/version.h )
-   message(STATUS "## Windows detected" )				
+   message(STATUS "## Windows detected" )
 else(WIN32)
    add_custom_command( OUTPUT ${VER_DES}/version.h
-                    COMMAND ${VER_SCRT}/version.sh ${CMAKE_CURRENT_SOURCE_DIR} ${VER_TMPL} ${VER_DES}  )
-   message(STATUS "## Linux detected" )				
+                    COMMAND ${VER_SCRT}/version.py ${CMAKE_CURRENT_SOURCE_DIR} ${VER_TMPL} ${VER_DES}  )
+   message(STATUS "## Linux detected" )
 endif(WIN32)
 
 
