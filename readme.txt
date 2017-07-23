@@ -1,4 +1,4 @@
-2016-12-27:
+2017-07-23:
 
 1. Overview
 This is a small utility for generating FFT of ASCII files or standard in. The output is either to file or std out. The build is static, so no complicated dependencies must be fulfilled and thus it should be possible to use the binary with any distribution that runs on x86 or x86_64.
@@ -38,23 +38,21 @@ fft depends on several things, which are listed below:
      shipped with Oneiric (Ubuntu 11.10) is not sufficient.
   c) boost for handling program options and other things
      like lexical cast (www.boost.org).
-  d) Subversion. You need it to check out the code from sourceforge.
+  d) Git. you can get the sources from github. 
      However, during build a version file is generated that is included
-     in the sources. In order to generate this version header, an svn
-     is required. It should work with the standard svn client
-     installation under Linux, and under Windows TortoiseSVN
-     should do the job.
+     in the sources. In order to generate this version header, git
+     is required. Currently, it only works with the git client under Linux.
   e) The gcc c++ tool chain under Linux. 
 
 Talk about standing on the shoulders of giants! Anyway, if you have all these prerequisites set up properly, all you need to do is:
 
 4.1: Check out the sources by issuing the following command:
 
-  $> svn checkout svn://svn.code.sf.net/p/cli-fft/code/trunk cli-fft
+  $> git clone https://github.com/jonolafur/cli-fft.git
 
 That should leave you with the source tree root at cli-fft (you can of course replace cli-fft with anything you like).
 
-4.2: cd to the root of the source tree and create a build directory there:
+4.2: cd to the root of the source tree and create a build directory there (Alternatively, you can do a clean out-of-source build):
   $> mkdir build
   $> cd build
 
